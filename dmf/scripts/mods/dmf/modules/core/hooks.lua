@@ -422,15 +422,16 @@ function DMFMod:hook_origin(obj, method, handler)
     return generic_hook(self, obj, method, handler, "hook_origin")
 end
 
--- :hook_file() allows you to hook every past and future version of a game file,
+-- :hook_require() allows you to hook every past and future version of a game file,
 --         executing a callback function on every instance.
 -- The chain of event is determined by mod load order.
-function DMFMod:hook_file(obj_str, callback_func)
+function DMFMod:hook_require(obj_str, callback_func)
 
     -- Set up the tables for the file
     local mod_name = self:get_name()
-    _file_hooks_by_file[obj_str]         = _file_hooks_by_file[obj_str] or {}
-    _file_hooks_applied_to_file[obj_str] = _file_hooks_applied_to_file[obj_str] or {[mod_name] = {}}
+    _file_hooks_by_file[obj_str]                   = _file_hooks_by_file[obj_str] or {}
+    _file_hooks_applied_to_file[obj_str]           = _file_hooks_applied_to_file[obj_str] or {}
+    _file_hooks_applied_to_file[obj_str][mod_name] = _file_hooks_applied_to_file[obj_str][mod_name] or {}
 
     -- Store file hooks by mod name to prevent duplicates per mod
     _file_hooks_by_file[obj_str][mod_name] = callback_func
