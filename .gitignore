@@ -1,6 +1,7 @@
 .temp
 .vscode
 **/*.zip
+*.zip
 vmf/bundleV1
 vmf/bundleV2
 node_modules
