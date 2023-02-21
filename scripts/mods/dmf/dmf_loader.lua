@@ -3,9 +3,6 @@ local dmf
 -- Native mod object used by Fatshark mod manager
 local dmf_mod_object = {}
 
--- Global method to load a file through iowith a return
-local io_dofile = Mods.file.dofile
-
 -- Global backup of original print() method
 local print = __print
 
@@ -14,38 +11,37 @@ local print = __print
 -- #####################################################################################################################
 
 function dmf_mod_object:init()
-  io_dofile("dmf/scripts/mods/dmf/modules/dmf_mod_data")
-  io_dofile("dmf/scripts/mods/dmf/modules/dmf_mod_manager")
-  --io_dofile("dmf/scripts/mods/dmf/modules/dmf_dummy")
-  io_dofile("dmf/scripts/mods/dmf/modules/dmf_package_manager")
-  io_dofile("dmf/scripts/mods/dmf/modules/core/safe_calls")
-  io_dofile("dmf/scripts/mods/dmf/modules/core/events")
-  io_dofile("dmf/scripts/mods/dmf/modules/core/settings")
-  io_dofile("dmf/scripts/mods/dmf/modules/core/logging")
-  io_dofile("dmf/scripts/mods/dmf/modules/core/misc")
-  io_dofile("dmf/scripts/mods/dmf/modules/core/persistent_tables")
-  io_dofile("dmf/scripts/mods/dmf/modules/core/io")
+  dofile("dmf/scripts/mods/dmf/modules/dmf_mod_data")
+  dofile("dmf/scripts/mods/dmf/modules/dmf_mod_manager")
+  -- dofile("dmf/scripts/mods/dmf/modules/dmf_dummy")
+  dofile("dmf/scripts/mods/dmf/modules/dmf_package_manager")
+  dofile("dmf/scripts/mods/dmf/modules/core/safe_calls")
+  dofile("dmf/scripts/mods/dmf/modules/core/events")
+  dofile("dmf/scripts/mods/dmf/modules/core/settings")
+  dofile("dmf/scripts/mods/dmf/modules/core/logging")
+  dofile("dmf/scripts/mods/dmf/modules/core/misc")
+  dofile("dmf/scripts/mods/dmf/modules/core/persistent_tables")
+  dofile("dmf/scripts/mods/dmf/modules/core/io")
 
-  -- DMF's internal io module is now loaded:
   dmf = get_mod("DMF")
 
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/debug/dev_console")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/debug/table_dump")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/hooks")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/require")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/toggling")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/keybindings")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/chat")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/localization")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/options")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/network")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/commands")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/gui/custom_textures")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/gui/custom_views")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/ui/chat/chat_actions")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/ui/options/mod_options")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/dmf_options")
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/mutators/mutators_manager")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/debug/dev_console")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/debug/table_dump")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/hooks")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/require")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/toggling")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/keybindings")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/chat")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/localization")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/options")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/network")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/commands")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/gui/custom_textures")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/gui/custom_views")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/ui/chat/chat_actions")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/ui/options/mod_options")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/dmf_options")
+  dmf:dofile("dmf/scripts/mods/dmf/modules/core/mutators/mutators_manager")
 
   dmf.delayed_chat_messages_hook()
   dmf:hook(ModManager, "destroy", function(func, ...)

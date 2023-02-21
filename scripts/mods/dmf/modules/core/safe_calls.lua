@@ -91,16 +91,6 @@ function dmf.safe_call_dofile(mod, error_prefix_data, file_path)
 end
 
 
--- Safe Call [io_dofile]
-function dmf.safe_call_io_dofile(mod, error_prefix_data, file_path)
-  if type(file_path) ~= "string" then
-    show_error(mod, error_prefix_data, "file path should be a string.")
-    return false
-  end
-  return dmf.safe_call(mod, error_prefix_data, mod.io_dofile_unsafe, mod, file_path)
-end
-
-
 -- Format error message and throw error.
 function dmf.throw_error(error_message, ...)
   error(string.format(error_message, ...), 0)
