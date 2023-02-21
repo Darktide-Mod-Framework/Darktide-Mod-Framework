@@ -38,6 +38,15 @@ stds["DT"] = {
             "sign", "degrees_to_radians", "sirp", "ease_pulse", "cartesian_to_polar", "ease_out_quad",
             "easeOutCubic", "radian_lerp", "auto_lerp", "rand_utf8_string", "point_is_inside_oobb",
         }},
-        "Crashify","Keyboard","Mouse","Application","Color","Quarternion","Vector3","Vector2","RESOLUTION_LOOKUP"
+        Managers = { fields = {
+            "mod", "event"
+        }},
+        Mods = { fields = {
+            lua = { fields = { "debug", "io", "ffi", "os" }},
+            "original_require",
+            "require_store",
+        }},
+        "Crashify","Keyboard","Mouse","Application","Color","Quarternion","Vector3","Vector2","RESOLUTION_LOOKUP",
+        "ModManager", "Utf8",
     },
 }
