@@ -7,6 +7,9 @@ if not _io.initialized then
   _io = dmf.deepcopy(Mods.lua.io)
 end
 
+-- Local backup of the loadstring function
+local _loadstring = Mods.lua.loadstring
+
 local _mod_directory = "./../mods"
 
 -- #####################################################################################################################
@@ -62,7 +65,7 @@ local function read_or_execute(file_path, args, return_type)
 
     -- Either execute the data or leave it unmodified
     if return_type == "exec_result" or return_type == "exec_boolean" then
-      local func = loadstring(result, file_path)
+      local func = _loadstring(result, file_path)
       result = func(args)
     end
   end
