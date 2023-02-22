@@ -44,10 +44,6 @@ function dmf_mod_object:init()
   dmf:dofile("dmf/scripts/mods/dmf/modules/core/mutators/mutators_manager")
 
   dmf.delayed_chat_messages_hook()
-  dmf:hook(ModManager, "destroy", function(func, ...)
-    dmf.mods_unload_event(true)
-    func(...)
-  end)
 end
 
 -- #####################################################################################################################
@@ -60,7 +56,7 @@ function dmf_mod_object:update(dt)
   dmf.check_keybinds()
   dmf.execute_queued_chat_command()
 
-  if not dmf.all_mods_were_loaded and Managers.mod._state == "done" then
+  if not dmf.all_mods_were_loaded and Managers.mod:all_mods_loaded() then
 
     dmf.generate_keybinds()
     dmf.initialize_dmf_options_view()
@@ -90,6 +86,12 @@ function dmf_mod_object:on_reload()
   dmf.hooks_unload()
   dmf.reset_guis()
   dmf.destroy_command_gui()
+end
+
+
+function dmf_mod_object:on_destroy()
+  print("DMF:ON_DESTROY()")
+  dmf.mods_unload_event(true)
 end
 
 
