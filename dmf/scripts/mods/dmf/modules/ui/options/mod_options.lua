@@ -350,9 +350,61 @@ local function create_option_template(self, widget_data, category_name, index_of
   end
 end
 
+-- Insert a new item into a table before any items that pass the item_tester function
+local function insert_before(tbl, item_tester, new_item)
+	local copy = {}
+	for _, item in ipairs(tbl) do
+		if item_tester(item) then
+			table.insert(copy, new_item)
+		end
+		table.insert(copy, item)
+	end
+	return copy
+end
+
+
 -- ####################################################################################################################
 -- ##### Hooks ########################################################################################################
 -- ####################################################################################################################
+
+-- Add Mods Options title to global localization table
+-- so that the SystemView options menu can localize it
+dmf:add_global_localize_strings({
+  -- TODO: copied from dmf/localization/dmf.lua, figure out a better way
+  mods_options = {
+    en = "Mod Options",
+    es = "Configuración de mods",
+    ru = "Настройки модов",
+  }
+})
+
+local dmf_option_definition = {
+	text = "mods_options",
+	type = "button",
+	icon = "content/ui/materials/icons/system/escape/settings",
+	trigger_function = function()
+		local context = {
+			can_exit = true,
+		}
+		local view_name = "dmf_options_view"
+		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+	end,
+}
+
+local function is_options_button(item)
+  return item.text == "loc_options_view_display_name"
+end
+
+-- Inject DMF Options button into the Esc menu
+dmf:hook_require("scripts/ui/views/system_view/system_view_content_list", function(instance)
+  -- Don't re-inject if it's already there
+  if table.find_by_key(instance.default, "text", dmf_option_definition.text) then
+    return
+  end
+
+  instance.default = insert_before(instance.default, is_options_button, dmf_option_definition)
+  instance.StateMainMenu = insert_before(instance.StateMainMenu, is_options_button, dmf_option_definition)
+end)
 
 -- ####################################################################################################################
 -- ##### DMF internal functions and variables #########################################################################
