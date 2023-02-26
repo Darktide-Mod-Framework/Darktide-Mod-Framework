@@ -91,13 +91,12 @@ end
 -- ##### DMF internal functions and variables #########################################################################
 -- ####################################################################################################################
 
--- Handles the return of global localize text_ids
-dmf:hook(_G, "Localize", function (func, text_id, ...)
+dmf:hook(LocalizationManager, "localize", function (func, self, text_id, ...)
 
   local text_translations = text_id and _global_localization_database[text_id]
   local message = get_translated_or_english_message(nil, text_translations, ...)
 
-  return message or func(text_id, ...)
+  return message or func(self, text_id, ...)
 end)
 
 -- ####################################################################################################################
@@ -128,7 +127,7 @@ dmf.quick_localize = function (mod, text_id)
   if mod_localization_table then
 
     local text_translations = mod_localization_table[text_id]
-    
+
     if text_translations then
       return text_translations[_language_id] or text_translations["en"]
     end
