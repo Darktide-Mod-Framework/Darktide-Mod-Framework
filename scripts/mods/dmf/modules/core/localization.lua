@@ -138,5 +138,5 @@ end
 -- ##### Script #######################################################################################################
 -- ####################################################################################################################
 
-local localization_table = dmf:dofile("dmf/localization/dmf")
+local localization_table = dmf:dofile("scripts/mods/dmf/localization/dmf")
 dmf.initialize_mod_localization(dmf, localization_table)
