@@ -55,6 +55,7 @@ end
 
 local function add_chat_message(message, sender)
   local channel_sender = sender or "SYSTEM"
+  message = tostring(message)
 
   -- Send to our stored chat element if it exists
   if _chat_element then
