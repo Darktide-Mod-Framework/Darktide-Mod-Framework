@@ -14,8 +14,10 @@ function dmf.check_wrong_argument_type(mod, dmf_function_name, argument_name, ar
     end
   end
 
-  mod:error("(%s): argument '%s' should have the '%s' type, not '%s'", dmf_function_name, argument_name,
-                                                                        table.concat(allowed_types, "/"), argument_type)
+  mod:error(
+      "(%s): argument '%s' should have the '%s' type, not '%s'\n%s",
+      dmf_function_name, argument_name, table.concat(allowed_types, "/"), argument_type, Script.callstack()
+  )
   return true
 end
 
