@@ -53,6 +53,21 @@ local create_description_template = function (self, params)
 end
 _type_template_map["description"] = create_description_template
 
+-- ##########################
+-- ###### Group #############
+-- ##########################
+
+-- Create group template
+local create_group_template = function(self, params)
+  local template = {
+    display_name = params.title,
+    widget_type = "group_header",
+    after = params.parent_index
+  }
+  return template
+end
+_type_template_map["group"] = create_group_template
+
 -- ###########################
 -- ###### Percent Slider #####
 -- ###########################
