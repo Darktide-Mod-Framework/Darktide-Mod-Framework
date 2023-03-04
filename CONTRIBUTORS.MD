@@ -1,6 +1,8 @@
 # DMF contributors (sorted alphabetically)
 Contribute to DMF -- add your name here!
 + [Aussiemon](https://github.com/Aussiemon)
++ [deluxghost](https://github.com/deluxghost)
++ [raindish](https://github.com/danreeves)
 + [Fracticality](https://github.com/fracticality)
 + [grasmann](https://github.com/grasmann)
 + [philipdestroyer](https://github.com/philippedavid)
