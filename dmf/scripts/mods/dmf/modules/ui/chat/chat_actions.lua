@@ -159,6 +159,7 @@ dmf:hook("ConstantElementChat", "_handle_active_chat_input", function(func, self
 
     -- getting state of 'arrow right', 'arrow up' and 'arrow down' buttons
     local arrow_right_pressed = false
+    local tab_pressed = false
     local arrow_up_pressed = false
     local arrow_down_pressed = false
     for _, stroke in ipairs(Keyboard.keystrokes()) do
