@@ -23,6 +23,9 @@ local group_header_height = 80
 
 local DEFAULT_NUM_DECIMALS = 0
 
+local _dropdown_deadzone = 0.25 -- 250ms delay before opening keybind popups
+local _last_dropdown_pressed = -1
+
 local value_font_style = table.clone(UIFontSettings.list_button)
 value_font_style.offset = {
   settings_grid_width - settings_value_width + 25,
@@ -694,10 +697,12 @@ blueprints.dropdown = {
 
     local value_changed = new_value ~= nil
 
-    if value_changed and new_value ~= value then
-      local on_activated = entry.on_activated
-
-      on_activated(new_value, entry)
+    if value_changed then
+      _last_dropdown_pressed = t
+      if new_value ~= value then
+        local on_activated = entry.on_activated
+        on_activated(new_value, entry)
+      end
     end
 
     local scrollbar_hotspot = content.scrollbar_hotspot
@@ -730,7 +735,11 @@ blueprints.keybind = {
     local hotspot = content.hotspot
 
     if hotspot.on_released then
-      parent:show_keybind_popup(widget, entry, content.entry.cancel_keys)
+      if (t - _last_dropdown_pressed) > _dropdown_deadzone then
+        parent:show_keybind_popup(widget, entry, content.entry.cancel_keys)
+      else
+        _last_dropdown_pressed = -1
+      end
     end
   end
 }
