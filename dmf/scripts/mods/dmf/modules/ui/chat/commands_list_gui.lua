@@ -193,7 +193,7 @@ local function draw(commands_list, selected_command_index)
 
     -- draw command description text (2+ strings)
     if command.selected and multistring then
-      for j = 2, selected_strings_number do
+      for j = selected_strings_number, 2, -1 do
         string_position.y = string_position.y - STRING_HEIGHT * scale
         Gui.slug_text(_gui, command_text_strings[j], font, font_size,
                         string_position, nil, Color(255, 255, 255, 255))
