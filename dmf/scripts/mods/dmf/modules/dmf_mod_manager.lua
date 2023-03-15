@@ -15,6 +15,7 @@ local ERRORS = {
     too_late_for_mod_creation = "[DMF Mod Manager] (new_mod) '%s': you can't create mods after vanilla mod manager " ..
                                  "finishes loading mod bundles.",
     -- dmf.initialize_mod_data:
+    mod_data_version_mismatch = "[DMF Mod Manager] (new_mod) mod options initialization: requires DMF version >= %s",
     mod_data_wrong_type = "[DMF Mod Manager] (new_mod) 'mod_data' initialization: mod_data file should return " ..
                            "table, not %s.",
     mod_options_initializing_failed = "[DMF Mod Manager] (new_mod) mod options initialization: could not initialize " ..
@@ -141,6 +142,7 @@ end
 -- #####################################################################################################################
 
 dmf = create_mod("DMF")
+dmf.version = "23.03.04"
 
 -- #####################################################################################################################
 -- ##### DMF internal functions and variables ##########################################################################
@@ -175,6 +177,12 @@ function dmf.initialize_mod_data(mod, mod_data)
       mod:error(ERRORS.REGULAR.mod_options_initializing_failed, error_message)
       return
     end
+  end
+
+  local min_dmf = mod_data.min_dmf
+  if min_dmf and dmf.version < min_dmf then
+    mod:error(ERRORS.REGULAR.mod_options_version_mismatch, min_dmf)
+    return
   end
 
   -- Textures initialization @TODO: move to a separate function
