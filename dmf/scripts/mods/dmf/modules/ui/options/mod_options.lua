@@ -390,6 +390,7 @@ dmf:add_global_localize_strings({
     en = "Mod Options",
     es = "Configuración de mods",
     ru = "Настройки модов",
+    ["zh-cn"] = "模组选项",
   }
 })
 
