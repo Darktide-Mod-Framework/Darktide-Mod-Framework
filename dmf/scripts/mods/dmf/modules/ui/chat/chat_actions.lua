@@ -80,8 +80,6 @@ end
 dmf:hook("ConstantElementChat", "_handle_active_chat_input", function(func, self, input_service, ui_renderer, ...)
   initialize_drawing_function()
 
-  local command_executed = false
-
   _chat_message = get_chat_message(self)
   _chat_opened = true
 
@@ -127,8 +125,6 @@ dmf:hook("ConstantElementChat", "_handle_active_chat_input", function(func, self
       _command_index = 0
 
       set_chat_message(self, "")
-
-      command_executed = true
 
     elseif string.sub(_chat_message, 1, 1) == "/" then
       dmf:notify(dmf:localize("chat_command_not_recognized") .. ": " .. _chat_message)

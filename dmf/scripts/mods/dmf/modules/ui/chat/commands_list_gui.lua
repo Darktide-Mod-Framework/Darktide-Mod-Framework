@@ -10,7 +10,7 @@ local FONT_SIZE = 22
 local MAX_COMMANDS_VISIBLE = 5
 
 local STRING_HEIGHT   = 25
-local STRING_Y_OFFSET = 7
+local STRING_Y_OFFSET = 2
 local STRING_X_MARGIN = 10
 
 local OFFSET_X = 10
