@@ -13,6 +13,13 @@ local _cancel_keys = {
 }
 local _reserved_keys = {}
 
+local ERRORS = {
+  REGULAR = {
+    invalid_widget_type = "[DMF Mod Options] (%s): \"%s\" is not a valid widget type " ..
+                                              "in this version of Darktide Mod Framework.",
+  },
+}
+
 -- ####################################################################################################################
 -- ##### Local functions ##############################################################################################
 -- ####################################################################################################################
@@ -336,7 +343,7 @@ local function widget_data_to_template(self, data)
     return _type_template_map[data.type](self, data)
   else
     dmf:dump(data, "widget", 1)
-    dmf.throw_error("[widget \"%s\"]: 'type' field must contain valid widget type name.", data.setting_id)
+    dmf:error(ERRORS.REGULAR.invalid_widget_type, tostring(data.mod_name), tostring(data.type))
   end
 end
 
