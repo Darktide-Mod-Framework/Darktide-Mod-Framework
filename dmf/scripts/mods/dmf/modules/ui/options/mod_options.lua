@@ -185,9 +185,9 @@ local create_mod_toggle_template = function (self, params)
     after = params.after,
     category = params.category,
     default_value = true,
-    display_name = dmf:localize("toggle_mod"),
+    display_name = params.readable_mod_name or params.mod_name,
     indentation_level = 0,
-    tooltip_text = dmf:localize("toggle_mod_description"),
+    tooltip_text = params.description,
     value_type = "boolean",
   }
 
@@ -348,6 +348,18 @@ local function widget_data_to_template(self, data)
 end
 
 
+-- Add a category for toggling mods
+local function create_toggle_category(self, categories)
+  local category = {
+    can_be_reset = false,
+    display_name = dmf:localize("toggle_mods"),
+    custom       = true
+  }
+  categories[#categories + 1] = category
+  return category
+end
+
+
 --  Add a mod category to the options view categories
 local function create_mod_category(self, categories, widget_data)
   local category = {
@@ -438,63 +450,102 @@ dmf.create_mod_options_settings = function (self, options_templates)
   local categories = options_templates.categories
   local settings = options_templates.settings
 
-  -- Create a category for every mod
+  -- Create the toggle category
+  local toggle_category = create_toggle_category(self, categories)
+  local toggle_index_offset = 0
+
+  -- Create the toggle category header
+  local toggle_header_data = {
+    type = "header",
+    category = toggle_category,
+    title = dmf:localize("toggle_mods"),
+    mod_name = "dmf",
+    tooltip = dmf:localize("toggle_mods")
+  }
+  local toggle_header = create_option_template(self, toggle_header_data, toggle_category.display_name, toggle_index_offset)
+  if toggle_header then
+    settings[#settings + 1] = toggle_header
+  end
+
+  -- Create the toggle category description
+  local desc_widget_data = {
+    mod_name = "dmf",
+    description = dmf:localize("toggle_mods_description"),
+    category = toggle_category.display_name,
+    display_name = toggle_category.display_name,
+    after = #settings,
+    type = "description"
+  }
+  local desc_template = create_option_template(self, desc_widget_data, toggle_category.display_name, toggle_index_offset)
+
+  if desc_template then
+    settings[#settings + 1] = desc_template
+    toggle_index_offset = toggle_index_offset + 1
+  end
+
+  -- Create a toggle for each toggleable mod
   for _, mod_data in ipairs(dmf.options_widgets_data) do
-    local category = create_mod_category(self, categories, mod_data[1])
-
-    local index_offset = 0
-
-    -- Create the category header
-    local template = create_option_template(self, mod_data[1], category.display_name, index_offset)
-    if template then
-      settings[#settings + 1] = template
-    end
-
-    -- Create the mod description
-    if mod_data[1].description then
-      local desc_widget_data = {
-        mod_name = mod_data[1].mod_name,
-        description = mod_data[1].description,
-        category = category.display_name,
-        display_name = category.display_name,
-        after = #settings,
-        type = "description"
-      }
-      local desc_template = create_option_template(self, desc_widget_data, category.display_name, index_offset)
-
-      if desc_template then
-        settings[#settings + 1] = desc_template
-        index_offset = index_offset + 1
-      end
-    end
-
-    -- Create a top-level toggle option if the mod is togglable
     if mod_data[1].is_togglable then
       local toggle_widget_data = {
         mod_name = mod_data[1].mod_name,
-        category = category.display_name,
+        readable_mod_name = mod_data[1].readable_mod_name or mod_data[1].title,
+        description = mod_data[1].description,
+        category = toggle_category.display_name,
         after = #settings,
         type = "mod_toggle"
       }
 
-      local toggle_template = create_option_template(self, toggle_widget_data, category.display_name, index_offset)
+      local toggle_template = create_option_template(self, toggle_widget_data, toggle_category.display_name, toggle_index_offset)
       if toggle_template then
         settings[#settings + 1] = toggle_template
-        index_offset = index_offset + 1
+        toggle_index_offset = toggle_index_offset + 1
       end
     end
+  end
 
-    -- Populate the category with options taken from the remaining options data
-    for i = 2, #mod_data do
-      local widget_data = mod_data[i]
+  -- Create a category for every mod with additional settings
+  for _, mod_data in ipairs(dmf.options_widgets_data) do
+    if #mod_data > 1 then
+      local category = create_mod_category(self, categories, mod_data[1])
 
-      template = widget_data_to_template(self, widget_data)
+      local index_offset = 0
+
+      -- Create the category header
+      local template = create_option_template(self, mod_data[1], category.display_name, index_offset)
       if template then
-        template.custom = true
-        template.category = category.display_name
-        template.after = template.after + index_offset
-
         settings[#settings + 1] = template
+      end
+
+      -- Create the mod description
+      if mod_data[1].description then
+        local desc_widget_data = {
+          mod_name = mod_data[1].mod_name,
+          description = mod_data[1].description,
+          category = category.display_name,
+          display_name = category.display_name,
+          after = #settings,
+          type = "description"
+        }
+        local desc_template = create_option_template(self, desc_widget_data, category.display_name, index_offset)
+
+        if desc_template then
+          settings[#settings + 1] = desc_template
+          index_offset = index_offset + 1
+        end
+      end
+
+      -- Populate the category with options taken from the remaining options data
+      for i = 2, #mod_data do
+        local widget_data = mod_data[i]
+
+        template = widget_data_to_template(self, widget_data)
+        if template then
+          template.custom = true
+          template.category = category.display_name
+          template.after = template.after + index_offset
+
+          settings[#settings + 1] = template
+        end
       end
     end
   end

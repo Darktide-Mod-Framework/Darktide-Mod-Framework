@@ -32,13 +32,11 @@ return {
   percent = {
     en = "%%",
   },
-  toggle_mod = {
-    en = "Toggle Mod",
-    ["zh-cn"] = "开关模组",
+  toggle_mods = {
+    en = "Toggle Mods",
   },
-  toggle_mod_description = {
-    en = "Enable or disable the mod",
-    ["zh-cn"] = "启用或禁用模组",
+  toggle_mods_description = {
+    en = "Enable or disable your mods.",
   },
   ui_scaling = {
     en = "UI Scaling for FHD+ Resolutions",
