@@ -186,6 +186,7 @@ local create_mod_toggle_template = function (self, params)
     category = params.category,
     default_value = true,
     display_name = params.readable_mod_name or params.mod_name,
+    disabled = params.disabled,
     indentation_level = 0,
     tooltip_text = params.description,
     value_type = "boolean",
@@ -460,7 +461,7 @@ dmf.create_mod_options_settings = function (self, options_templates)
     category = toggle_category,
     title = dmf:localize("toggle_mods"),
     mod_name = "dmf",
-    tooltip = dmf:localize("toggle_mods")
+    tooltip = dmf:localize("toggle_mods"),
   }
   local toggle_header = create_option_template(self, toggle_header_data, toggle_category.display_name, toggle_index_offset)
   if toggle_header then
@@ -483,27 +484,26 @@ dmf.create_mod_options_settings = function (self, options_templates)
     toggle_index_offset = toggle_index_offset + 1
   end
 
-  -- Create a toggle for each toggleable mod
+  -- Create a toggle for each mod; non-toggleable mods' toggles are disabled
   for _, mod_data in ipairs(dmf.options_widgets_data) do
-    if mod_data[1].is_togglable then
-      local toggle_widget_data = {
-        mod_name = mod_data[1].mod_name,
-        readable_mod_name = mod_data[1].readable_mod_name or mod_data[1].title,
-        description = mod_data[1].description,
-        category = toggle_category.display_name,
-        after = #settings,
-        type = "mod_toggle"
-      }
+    local toggle_widget_data = {
+      mod_name = mod_data[1].mod_name,
+      readable_mod_name = mod_data[1].readable_mod_name or mod_data[1].title,
+      description = mod_data[1].description,
+      disabled = not mod_data[1].is_togglable,
+      category = toggle_category.display_name,
+      after = #settings,
+      type = "mod_toggle"
+    }
 
-      local toggle_template = create_option_template(self, toggle_widget_data, toggle_category.display_name, toggle_index_offset)
-      if toggle_template then
-        settings[#settings + 1] = toggle_template
-        toggle_index_offset = toggle_index_offset + 1
-      end
+    local toggle_template = create_option_template(self, toggle_widget_data, toggle_category.display_name, toggle_index_offset)
+    if toggle_template then
+      settings[#settings + 1] = toggle_template
+      toggle_index_offset = toggle_index_offset + 1
     end
   end
 
-  -- Create a category for every mod with additional settings
+  -- Create a category for every mod that has additional settings
   for _, mod_data in ipairs(dmf.options_widgets_data) do
     if #mod_data > 1 then
       local category = create_mod_category(self, categories, mod_data[1])
