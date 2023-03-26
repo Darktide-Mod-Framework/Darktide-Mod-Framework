@@ -1,13 +1,19 @@
+<style>
+@media (prefers-color-scheme: dark) {
+  #dmf-logo { filter: invert() }
+}
+</style>
+
 <p align="center">
   <a href="#welcome-to-the-darktide-mod-framework-vmf-repository">
     <img
+      id="dmf-logo"
       alt="Darktide Mod Framework"
       src="./assets/dmf_logo_black.png"
       width="600"
     />
   </a>
 </p>
-
 
 ## Welcome to the Darktide Mod Framework (DMF) Repository!
 
