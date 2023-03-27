@@ -7,8 +7,14 @@ local _widgets_by_name
 -- ####################################################################################################################
 
 local function load_scrolling_speed_setting()
-  if dmf:get("dmf_options_scrolling_speed") and _widgets_by_name and _widgets_by_name["scrollbar"] then
-      _widgets_by_name["scrollbar"].content.scroll_speed = dmf:get("dmf_options_scrolling_speed")
+  local dmf_scroll_speed = dmf:get("dmf_options_scrolling_speed")
+  if dmf_scroll_speed and _widgets_by_name then
+    if _widgets_by_name["scrollbar"] then
+      _widgets_by_name["scrollbar"].content.scroll_speed = dmf_scroll_speed / 10
+    end
+    if _widgets_by_name["settings_scrollbar"] then
+      _widgets_by_name["settings_scrollbar"].content.scroll_speed = dmf_scroll_speed / 10
+    end
   end
 end
 
@@ -151,6 +157,8 @@ DMFOptionsView.cb_on_back_pressed = function (self)
     self._close_selected_setting = true
   elseif selected_navigation_column == SETTINGS_GRID then
     self:_change_navigation_column(selected_navigation_column - 1)
+  elseif self._require_restart then
+    self:_restart_popup_info()
   else
     local view_name = "dmf_options_view"
     Managers.ui:close_view(view_name)
@@ -207,6 +215,30 @@ DMFOptionsView.cb_reset_category_to_default = function (self)
   end)
 end
 
+DMFOptionsView._restart_popup_info = function (self)
+  local context = {
+    title_text = "loc_popup_settings_require_restart_header",
+    description_text = "loc_popup_settings_require_restart_description",
+    options = {
+      {
+        text = "loc_confirm",
+        close_on_pressed = true,
+        callback = callback(function ()
+          self._popup_id = nil
+          local view_name = "options_view"
+          self._require_restart = false
+
+          Managers.ui:close_view(view_name)
+        end)
+      }
+    }
+  }
+
+  Managers.event:trigger("event_show_ui_popup", context, function (id)
+    self._popup_id = id
+  end)
+end
+
 DMFOptionsView._setup_input_legend = function (self)
   self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
   local legend_inputs = self._definitions.legend_inputs
@@ -225,7 +257,7 @@ DMFOptionsView._setup_content_grid_scrollbar = function (self, grid, widget_id, 
 
   load_scrolling_speed_setting()
 
-  grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
+  grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id, true)
   grid:set_scrollbar_progress(0)
 end
 
@@ -746,6 +778,7 @@ DMFOptionsView._setup_settings_config = function (self, config)
   local settings_default_values = {}
   local aligment_list = {}
   local callback_name = "cb_on_settings_pressed"
+  local changed_callback_name = "cb_on_settings_changed"
 
   for setting_index, setting in ipairs(config_settings) do
     local valid = self._validation_mapping[setting.category].settings[setting.display_name].validation_result
@@ -768,7 +801,7 @@ DMFOptionsView._setup_settings_config = function (self, config)
       end
 
       local widget_suffix = "setting_" .. tostring(setting_index)
-      local widget, alignment_widget = self:_create_settings_widget_from_config(setting, category, widget_suffix, callback_name)
+      local widget, alignment_widget = self:_create_settings_widget_from_config(setting, category, widget_suffix, callback_name, changed_callback_name)
       category_widgets[category][#widgets + 1] = {
         widget = widget,
         alignment_widget = alignment_widget
@@ -852,7 +885,7 @@ DMFOptionsView._set_tooltip_data = function (self, widget)
       height
     }
     self._widgets_by_name.tooltip.offset[1] = x_pos - width * 0.8
-    self._widgets_by_name.tooltip.offset[2] = new_y - height
+    self._widgets_by_name.tooltip.offset[2] = math.max(new_y - height, 20)
     self._widgets_by_name.tooltip.content.visible = true
   end
 end
@@ -945,7 +978,7 @@ DMFOptionsView._create_settings_widget_from_config = function (self, config, cat
     local init = template.init
 
     if init then
-      init(self, widget, config, callback_name)
+      init(self, widget, config, callback_name, changed_callback_name)
     end
   end
 
@@ -1076,6 +1109,24 @@ DMFOptionsView.cb_on_settings_pressed = function (self, widget, entry)
     local widget_name = widget.name
     local selected_widget = self:_set_exclusive_focus_on_grid_widget(widget_name)
     selected_widget.offset[3] = selected_widget and 90 or 0
+  end
+end
+
+DMFOptionsView.cb_on_settings_changed = function (self, widget, entry, option_id)
+  if not self._require_restart then
+    if option_id then
+      for i = 1, #entry.options do
+        local option = entry.options[i]
+
+        if option.id == option_id then
+          self._require_restart = option.require_restart
+
+          break
+        end
+      end
+    else
+      self._require_restart = entry.require_restart
+    end
   end
 end
 
