@@ -1,11 +1,13 @@
 # DMF contributors (sorted alphabetically)
 Contribute to DMF -- add your name here!
++ [alxl](https://github.com/ItsAlxl)
 + [Aussiemon](https://github.com/Aussiemon)
 + [deluxghost](https://github.com/deluxghost)
 + [raindish](https://github.com/danreeves)
 + [Fracticality](https://github.com/fracticality)
 + [grasmann](https://github.com/grasmann)
 + [philipdestroyer](https://github.com/philippedavid)
++ [ronvoluted](https://github.com/ronvoluted)
 + [SirAiedail](https://github.com/SirAiedail)
 
 # VMF contributors (sorted alphabetically)
