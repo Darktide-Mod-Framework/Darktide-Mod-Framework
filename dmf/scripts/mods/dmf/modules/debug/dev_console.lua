@@ -49,16 +49,24 @@ local function close_dev_console()
 
     CommandWindow.close()
 
-    -- CommandWindow won't close by itself, so it have to be closed manually
-    dmf:pcall(function()
-      _ffi.cdef([[
-        void* FindWindowA(const char* lpClassName, const char* lpWindowName);
-        int64_t SendMessageA(void* hWnd, unsigned int Msg, uint64_t wParam, int64_t lParam);
-      ]])
-      local WM_CLOSE = 0x10;
-      local hwnd = _ffi.C.FindWindowA("ConsoleWindowClass", "Developer console")
-      _ffi.C.SendMessageA(hwnd, WM_CLOSE, 0, 0)
-    end)
+    -- CommandWindow won't close by itself, so it has to be closed through FFI
+    if _ffi then
+      dmf:pcall(function()
+        if _ffi then
+          _ffi.cdef([[
+            void* FindWindowA(const char* lpClassName, const char* lpWindowName);
+            int64_t SendMessageA(void* hWnd, unsigned int Msg, uint64_t wParam, int64_t lParam);
+          ]])
+          local WM_CLOSE = 0x10;
+          local hwnd = _ffi.C.FindWindowA("ConsoleWindowClass", "Developer console")
+          _ffi.C.SendMessageA(hwnd, WM_CLOSE, 0, 0)
+        end
+      end)
+
+    -- Or manually closed by the user
+    else
+      dmf:warning(dmf:localize("dev_console_close_warning"))
+    end
 
     _console_data.enabled = false
   end
