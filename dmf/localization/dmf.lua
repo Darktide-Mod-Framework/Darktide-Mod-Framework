@@ -329,6 +329,9 @@ return {
     ru = "Консоль разработчика закрыта.",
     ["zh-cn"] = "已关闭开发者控制台。",
   },
+  dev_console_close_warning = {
+    en = "The developer console is disabled, but must be closed manually.",
+  },
 
 
   -- MUTATORS

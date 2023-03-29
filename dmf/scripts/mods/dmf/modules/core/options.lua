@@ -117,11 +117,12 @@ local function initialize_generic_widget_data(mod, data, localize)
   new_data.mod_name      = mod:get_name()
 
   -- Defined in widget
-  new_data.type          = data.type
-  new_data.setting_id    = data.setting_id
-  new_data.title         = data.title         -- optional, if (localize == true)
-  new_data.tooltip       = data.tooltip       -- optional
-  new_data.default_value = data.default_value
+  new_data.type            = data.type
+  new_data.setting_id      = data.setting_id
+  new_data.title           = data.title           -- optional, if (localize == true)
+  new_data.tooltip         = data.tooltip         -- optional
+  new_data.default_value   = data.default_value
+  new_data.require_restart = data.require_restart -- optional
 
   -- Overwrite global optons localization setting if widget defined it
   if data.localize == nil then

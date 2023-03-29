@@ -159,6 +159,7 @@ local create_checkbox_template = function (self, params)
     display_name = params.title,
     indentation_level = params.depth,
     tooltip_text = params.tooltip,
+    require_restart = params.require_restart,
     value_type = "boolean",
   }
   template.on_activated = function(new_value)
@@ -189,6 +190,7 @@ local create_mod_toggle_template = function (self, params)
     disabled = params.disabled,
     indentation_level = 0,
     tooltip_text = params.description,
+    require_restart = params.require_restart,
     value_type = "boolean",
   }
 
@@ -226,6 +228,7 @@ local create_dropdown_template = function (self, params)
     indentation_level = params.depth,
     options = params.options,
     tooltip_text = params.tooltip,
+    require_restart = params.require_restart,
     widget_type = "dropdown",
   }
   template.on_activated = function(new_value)

@@ -7,7 +7,7 @@ if not _io.initialized then
   _io = dmf.deepcopy(Mods.lua.io)
 end
 
--- Local backup of the io library
+-- Local backup of the os library
 local _os = dmf:persistent_table("_os")
 _os.initialized = _os.initialized or false
 if not _os.initialized then
@@ -16,6 +16,11 @@ end
 
 -- Global backup of original print() method
 local print = __print
+
+local function log_and_console_print(message, ...)
+  print(message, ...)
+  CommandWindow.print(message, ...)
+end
 
 local function table_dump(key, value, depth, max_depth)
   if max_depth < depth then
@@ -28,7 +33,7 @@ local function table_dump(key, value, depth, max_depth)
   if value_type == "table" then
     prefix = prefix .. ((key == nil and "") or " = ")
 
-    print(prefix .. "table")
+    log_and_console_print(prefix .. "table")
 
     for key_, value_ in pairs(value) do
       table_dump(key_, value_, depth + 1, max_depth)
@@ -38,9 +43,9 @@ local function table_dump(key, value, depth, max_depth)
 
     if meta then
       if type(meta) == "boolean" then
-        print(prefix .. "protected metatable")
+        log_and_console_print(prefix .. "protected metatable")
       else
-        print(prefix .. "metatable")
+        log_and_console_print(prefix .. "metatable")
         for key_, value_ in pairs(meta) do
           if key_ ~= "__index" and key_ ~= "super" then
             table_dump(key_, value_, depth + 1, max_depth)
@@ -49,9 +54,9 @@ local function table_dump(key, value, depth, max_depth)
       end
     end
   elseif value_type == "function" or value_type == "thread" or value_type == "userdata" or value == nil then
-    print(prefix .. " = " .. tostring(value))
+    log_and_console_print(prefix .. " = " .. tostring(value))
   else
-    print(prefix .. " = " .. tostring(value) .. " (" .. value_type .. ")")
+    log_and_console_print(prefix .. " = " .. tostring(value) .. " (" .. value_type .. ")")
   end
 end
 
@@ -77,7 +82,7 @@ DMFMod.dump = function (self, dumped_object, dumped_object_name, max_depth)
   end
 
   if dumped_object_name then
-    print(string.format("<%s>", dumped_object_name))
+    log_and_console_print(string.format("<%s>", dumped_object_name))
   end
 
   if not max_depth then
@@ -96,7 +101,7 @@ DMFMod.dump = function (self, dumped_object, dumped_object_name, max_depth)
   end
 
   if dumped_object_name then
-    print(string.format("</%s>", dumped_object_name))
+    log_and_console_print(string.format("</%s>", dumped_object_name))
   end
 end
 

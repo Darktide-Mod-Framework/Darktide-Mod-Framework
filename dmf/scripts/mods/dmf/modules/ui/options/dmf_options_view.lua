@@ -924,7 +924,7 @@ DMFOptionsView._update_settings_content_widgets = function (self, dt, t, input_s
   end
 end
 
-DMFOptionsView._create_settings_widget_from_config = function (self, config, category, suffix, callback_name)
+DMFOptionsView._create_settings_widget_from_config = function (self, config, category, suffix, callback_name, changed_callback_name)
   local scenegraph_id = "settings_grid_content_pivot"
   local default_value = config.default_value
   local default_value_type = type(default_value)
@@ -1112,20 +1112,23 @@ DMFOptionsView.cb_on_settings_pressed = function (self, widget, entry)
   end
 end
 
-DMFOptionsView.cb_on_settings_changed = function (self, widget, entry, option_id)
+DMFOptionsView.cb_on_settings_changed = function (self, widget, entry, option_value)
   if not self._require_restart then
-    if option_id then
+
+    -- Entry supersedes option
+    if entry.require_restart then
+      self._require_restart = true
+
+    -- Search by option value
+    elseif option_value then
       for i = 1, #entry.options do
         local option = entry.options[i]
 
-        if option.id == option_id then
+        if option.value == option_value then
           self._require_restart = option.require_restart
-
           break
         end
       end
-    else
-      self._require_restart = entry.require_restart
     end
   end
 end

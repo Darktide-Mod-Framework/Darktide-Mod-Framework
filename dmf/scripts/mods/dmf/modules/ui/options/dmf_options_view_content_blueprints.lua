@@ -171,6 +171,7 @@ local blueprints = {
 
       if new_value ~= nil and new_value ~= value then
         on_activated(new_value, entry)
+        entry.changed_callback(new_value)
       end
     end
   }
@@ -291,6 +292,7 @@ blueprints.percent_slider = {
 
     if new_value then
       on_activated(new_value * 100, entry)
+      entry.changed_callback(new_value)
 
       content.slider_value = new_value
       content.previous_slider_value = new_value
@@ -389,6 +391,7 @@ blueprints.value_slider = {
       local new_value = explode_function(new_normalized_value, entry)
 
       on_activated(new_value, entry)
+      entry.changed_callback(new_value)
 
       content.slider_value = new_normalized_value
       content.previous_slider_value = new_normalized_value
@@ -499,6 +502,7 @@ blueprints.slider = {
       local new_value = math.lerp(entry.min_value, entry.max_value, new_value_fraction)
 
       on_activated(new_value, entry)
+      entry.changed_callback(new_value)
 
       content.slider_value = new_value_fraction
       content.previous_slider_value = new_value_fraction
@@ -601,7 +605,7 @@ blueprints.dropdown = {
 
     if selected_index and focused then
       if using_gamepad and hotspot.on_pressed then
-        new_value = options[selected_index].id
+        new_value = options[selected_index].value
       end
 
       hotspot_style.on_pressed_sound = hotspot_style.on_pressed_fold_in_sound
@@ -612,7 +616,7 @@ blueprints.dropdown = {
     value = entry.get_function and entry:get_function() or content.internal_value or "<not selected>"
 
     local preview_option = options_by_value[value]
-    local preview_option_id = preview_option and preview_option.id
+    local preview_option_value = preview_option and preview_option.value
     local preview_value = preview_option and preview_option.display_name or Managers.localization:localize("loc_settings_option_unavailable")
 
     content.value_text = preview_value
@@ -636,7 +640,7 @@ blueprints.dropdown = {
       for i = 1, #options do
         local option = options[i]
 
-        if option.id == preview_option_id then
+        if option.value == preview_option_value then
           selected_index = i
 
           break
@@ -729,6 +733,7 @@ blueprints.dropdown = {
       if new_value ~= value then
         local on_activated = entry.on_activated
         on_activated(new_value, entry)
+        entry.changed_callback(new_value)
       end
     end
 
