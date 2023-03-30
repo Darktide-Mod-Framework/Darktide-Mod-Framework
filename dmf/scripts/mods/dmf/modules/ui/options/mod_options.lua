@@ -158,8 +158,8 @@ local create_checkbox_template = function (self, params)
     default_value = params.default_value,
     display_name = params.title,
     indentation_level = params.depth,
-    tooltip_text = params.tooltip,
     require_restart = params.require_restart,
+    tooltip_text = params.tooltip,
     value_type = "boolean",
   }
   template.on_activated = function(new_value)
@@ -186,11 +186,11 @@ local create_mod_toggle_template = function (self, params)
     after = params.after,
     category = params.category,
     default_value = true,
-    display_name = params.readable_mod_name or params.mod_name,
     disabled = params.disabled,
+    display_name = params.readable_mod_name or params.mod_name,
     indentation_level = 0,
-    tooltip_text = params.description,
     require_restart = params.require_restart,
+    tooltip_text = params.description,
     value_type = "boolean",
   }
 
