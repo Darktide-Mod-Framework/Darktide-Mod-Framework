@@ -143,7 +143,7 @@ local blueprints = {
       end
 
       entry.changed_callback = function (changed_value)
-        callback(parent, callback_name, widget, entry)()
+        --callback(parent, callback_name, widget, entry)()
         callback(parent, changed_callback_name, widget, entry)()
       end
     end,
