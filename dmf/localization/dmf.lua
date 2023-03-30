@@ -34,9 +34,11 @@ return {
   },
   toggle_mods = {
     en = "Toggle Mods",
+    ["zh-cn"] = "开启关闭模组",
   },
   toggle_mods_description = {
     en = "Enable or disable your mods.",
+    ["zh-cn"] = "启用或禁用安装的模组。",
   },
   ui_scaling = {
     en = "UI Scaling for FHD+ Resolutions",
@@ -331,6 +333,7 @@ return {
   },
   dev_console_close_warning = {
     en = "The developer console is disabled, but must be closed manually.",
+    ["zh-cn"] = "开发者控制台已禁用，但必须手动关闭。",
   },
 
 
