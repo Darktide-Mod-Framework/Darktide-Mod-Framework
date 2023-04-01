@@ -5,7 +5,7 @@ local dmf_options_view_settings = {
   shading_environment = "content/shading_environments/ui/system_menu",
   grid_size = {
     500,
-    800
+    768
   },
   grid_spacing = {
     0,

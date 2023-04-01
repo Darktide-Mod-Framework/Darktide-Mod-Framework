@@ -21,7 +21,7 @@ local mask_size = {
 local mask_offset_y = 16
 local settings_mask_size = {
   1080 + grid_blur_edge_size[1] * 2,
-  grid_height + grid_blur_edge_size[2]
+  grid_height + grid_blur_edge_size[2] + 32
 }
 
 local settings_grid_height = grid_height + mask_offset_y
