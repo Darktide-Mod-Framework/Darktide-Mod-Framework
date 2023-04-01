@@ -62,9 +62,10 @@ local scenegraph_definition = {
       grid_width,
       grid_height
     },
+    -- Move the categories up and left to compensate for removed icons
     position = {
-      180,
-      240,
+      140,
+      190,
       1
     }
   },

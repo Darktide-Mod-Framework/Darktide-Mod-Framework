@@ -676,7 +676,7 @@ DMFOptionsView.present_category_widgets = function (self, category)
     local scrollbar_widget_id = "settings_scrollbar"
     local grid_scenegraph_id = "settings_grid_background"
     local grid_pivot_scenegraph_id = "settings_grid_content_pivot"
-    local grid_spacing = _view_settings.grid_spacing
+    local grid_spacing = _view_settings.settings_grid_spacing
     self._settings_content_grid = self:_setup_grid(self._settings_content_widgets, self._settings_alignment_list, grid_scenegraph_id, grid_spacing, false)
 
     self:_setup_content_grid_scrollbar(self._settings_content_grid, scrollbar_widget_id, grid_scenegraph_id, grid_pivot_scenegraph_id)
@@ -745,7 +745,7 @@ DMFOptionsView._setup_category_config = function (self, config)
   local scrollbar_widget_id = "scrollbar"
   local grid_scenegraph_id = "background"
   local grid_pivot_scenegraph_id = "grid_content_pivot"
-  local grid_spacing = _view_settings.grid_spacing
+  local grid_spacing = _view_settings.category_grid_spacing
   self._category_content_grid = self:_setup_grid(self._category_content_widgets, self._category_alignment_list, grid_scenegraph_id, grid_spacing, true)
 
   self:_setup_content_grid_scrollbar(self._category_content_grid, scrollbar_widget_id, grid_scenegraph_id, grid_pivot_scenegraph_id)

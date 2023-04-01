@@ -38,16 +38,16 @@ dmf_mod_data.options = {
           keybind_type    = "function_call",
           function_name   = "toggle_developer_console"
         },
-        {
-          setting_id    = "show_network_debug_info",
-          type          = "checkbox",
-          default_value = false
-        },
-        {
-          setting_id    = "log_ui_renderers_info",
-          type          = "checkbox",
-          default_value = false
-        }
+        -- {
+        --   setting_id    = "show_network_debug_info",
+        --   type          = "checkbox",
+        --   default_value = false
+        -- },
+        -- {
+        --   setting_id    = "log_ui_renderers_info",
+        --   type          = "checkbox",
+        --   default_value = false
+        -- }
       }
     },
     {
