@@ -249,7 +249,9 @@ _type_template_map["dropdown"] = create_dropdown_template
 -- ######### Keybind #########
 -- ###########################
 
-local set_new_keybind = function (self, keybind_data)
+local set_keybind = function (self, keybind_data, keys)
+  keybind_data.keys = keys
+
   local mod = get_mod(keybind_data.mod_name)
   dmf.add_mod_keybind(
     mod,
@@ -286,25 +288,30 @@ local create_keybind_template = function (self, params)
     mod_name = params.mod_name,
     setting_id = params.setting_id,
     keys = dmf.keys_to_keybind_result(params.keys),
+    default_value = dmf.keys_to_keybind_result(params.default_value) or {},
 
     on_activated = function (new_value, old_value)
 
-      for i = 1, #_cancel_keys do
-        local cancel_key = _cancel_keys[i]
-        if cancel_key == new_value.main then
+      -- Prevent unbinding the mod options menu
+      if params.setting_id ~= "open_dmf_options" then
 
-          -- Prevent unbinding the mod options menu
-          if params.setting_id ~= "open_dmf_options" then
-
-            -- Unbind the keybind
-            params.keys = {}
-            set_new_keybind(self, params)
-          end
-
+        -- Unbind the keybind if the new value is empty
+        if not (new_value and new_value.main) then
+          set_keybind(self, params, {})
           return true
+        end
+
+        -- Unbind the keybind if the new value matches a cancel key
+        for i = 1, #_cancel_keys do
+          local cancel_key = _cancel_keys[i]
+          if cancel_key == new_value.main then
+            set_keybind(self, params, {})
+            return true
+          end
         end
       end
 
+      -- Don't modify the keybind if the new value is a reserved key
       for i = 1, #_reserved_keys do
         local reserved_key = _reserved_keys[i]
         if reserved_key == new_value.main then
@@ -312,16 +319,16 @@ local create_keybind_template = function (self, params)
         end
       end
 
-      -- Get the new keybind
+      -- Get the keys of the new value
       local keys = dmf.keybind_result_to_keys(new_value)
 
-      -- Bind the new key and prevent unbinding the mod options menu
+      -- Set the new keybind unless it would unbind the mod options menu
       if keys and #keys > 0 or params.setting_id ~= "open_dmf_options" then
-        params.keys = keys
-        set_new_keybind(self, params)
+        set_keybind(self, params, keys)
+        return true
       end
 
-      return true
+      return false
     end,
 
     get_function = function (template)

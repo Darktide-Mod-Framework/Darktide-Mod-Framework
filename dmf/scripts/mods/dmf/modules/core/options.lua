@@ -301,11 +301,6 @@ local allowed_keybind_types = {
   view_toggle   = true,
   mod_toggle    = true
 }
-local allowed_modifier_keys = {
-  ctrl  = true,
-  alt   = true,
-  shift = true
-}
 local function validate_keybind_data(data)
   if data.keybind_global and type(data.keybind_global) ~= "boolean" then
     dmf.throw_error("[widget \"%s\" (keybind)]: 'keybind_global' field must have 'boolean' type", data.setting_id)
@@ -343,13 +338,6 @@ local function validate_keybind_data(data)
   end
   if default_value[1] and not dmf.can_bind_as_primary_key(default_value[1]) then
     dmf.throw_error("[widget \"%s\" (keybind)]: 'default_value[1]' must be a valid key name", data.setting_id)
-  end
-  if default_value[2] and not allowed_modifier_keys[default_value[2]] or
-     default_value[3] and not allowed_modifier_keys[default_value[3]] or
-     default_value[4] and not allowed_modifier_keys[default_value[4]]
-  then
-    dmf.throw_error("[widget \"%s\" (keybind)]: 'default_value [2], [3] and [4]' can be only strings: \"ctrl\", " ..
-                     "\"alt\" and \"shift\" (in no particular order)", data.setting_id)
   end
 
   local used_keys = {}
