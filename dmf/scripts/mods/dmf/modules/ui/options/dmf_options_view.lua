@@ -7,13 +7,13 @@ local _widgets_by_name
 -- ####################################################################################################################
 
 local function load_scrolling_speed_setting()
-  local dmf_scroll_speed = dmf:get("dmf_options_scrolling_speed")
-  if dmf_scroll_speed and _widgets_by_name then
+  if _widgets_by_name then
+    local dmf_scroll_speed = math.clamp((dmf:get("dmf_options_scrolling_speed") or 100) / 1000, 0.05, 0.5)
     if _widgets_by_name["scrollbar"] then
-      _widgets_by_name["scrollbar"].content.scroll_speed = dmf_scroll_speed / 10
+      _widgets_by_name["scrollbar"].content.scroll_amount = dmf_scroll_speed
     end
     if _widgets_by_name["settings_scrollbar"] then
-      _widgets_by_name["settings_scrollbar"].content.scroll_speed = dmf_scroll_speed / 10
+      _widgets_by_name["settings_scrollbar"].content.scroll_amount = dmf_scroll_speed
     end
   end
 end

@@ -25,6 +25,7 @@ local settings_mask_size = {
 }
 
 local settings_grid_height = grid_height + mask_offset_y
+local settings_grid_scroll_amount = math.clamp((dmf:get("dmf_options_scrolling_speed") or 100) / 1000, 0.05, 0.5)
 
 local tooltip_text_style = table.clone(UIFontSettings.body)
 tooltip_text_style.text_horizontal_alignment = "left"
@@ -387,7 +388,8 @@ local widget_definitions = {
     visible = false
   }),
   scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "scrollbar", {
-    scroll_speed = (dmf:get("dmf_options_scrolling_speed") / 10) or 10
+    scroll_speed = 10,
+    scroll_amount = settings_grid_scroll_amount,
   }),
   grid_mask = UIWidget.create_definition({
     {
@@ -410,7 +412,8 @@ local widget_definitions = {
     }
   }, "grid_interaction"),
   settings_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "settings_scrollbar", {
-    scroll_speed = (dmf:get("dmf_options_scrolling_speed") / 10) or 10
+    scroll_speed  = 10,
+    scroll_amount = settings_grid_scroll_amount,
   }),
   settings_grid_mask = UIWidget.create_definition({
     {
