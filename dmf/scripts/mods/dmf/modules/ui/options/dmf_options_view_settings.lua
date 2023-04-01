@@ -5,9 +5,13 @@ local dmf_options_view_settings = {
   shading_environment = "content/shading_environments/ui/system_menu",
   grid_size = {
     500,
-    768
+    820 -- Increased to compensate for upshifted category grid
   },
-  grid_spacing = {
+  category_grid_spacing = {
+    0,
+    3
+  },
+  settings_grid_spacing = {
     0,
     10
   },

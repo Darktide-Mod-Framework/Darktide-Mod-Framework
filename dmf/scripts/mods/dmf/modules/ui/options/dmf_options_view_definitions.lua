@@ -21,7 +21,7 @@ local mask_size = {
 local mask_offset_y = 16
 local settings_mask_size = {
   1080 + grid_blur_edge_size[1] * 2,
-  grid_height + grid_blur_edge_size[2] + 32
+  grid_height + grid_blur_edge_size[2]
 }
 
 local settings_grid_height = grid_height + mask_offset_y
@@ -62,9 +62,10 @@ local scenegraph_definition = {
       grid_width,
       grid_height
     },
+    -- Move the categories up and left to compensate for removed icons
     position = {
-      180,
-      240,
+      140,
+      190,
       1
     }
   },
