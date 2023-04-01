@@ -194,6 +194,15 @@ local CHECK_INPUT_FUNCTIONS = {
   }
 }
 
+local KEYS_INPUT_FUNCTIONS = {}
+
+for key_id, key_data in pairs(KEYS_INFO) do
+  KEYS_INPUT_FUNCTIONS[key_id] = {
+    check_pressed  = CHECK_INPUT_FUNCTIONS[key_data[3]].PRESSED,
+    check_released = CHECK_INPUT_FUNCTIONS[key_data[3]].RELEASED
+  }
+end
+
 local _raw_keybinds_data = {}
 local _keybinds = {}
 local _pressed_key
@@ -278,7 +287,7 @@ function dmf.check_keybinds()
                 all_pressed = false
                 break
               end
-            elseif Keyboard.button(KEYS_INFO[enabler][1]) <= 0 then
+            elseif KEYS_INPUT_FUNCTIONS[enabler].check_released(enabler) then
               all_pressed = false
               break
             end
@@ -286,10 +295,10 @@ function dmf.check_keybinds()
 
           -- Check that no modifier keys are pressed that shouldn't be
           if all_pressed and (
-             (not keybind_data.ctrl  and pressed_modifiers.ctrl)  or
-             (not keybind_data.alt   and pressed_modifiers.alt)   or
-             (not keybind_data.shift and pressed_modifiers.shift)
-            )
+            (not keybind_data.ctrl  and pressed_modifiers.ctrl)  or
+            (not keybind_data.alt   and pressed_modifiers.alt)   or
+            (not keybind_data.shift and pressed_modifiers.shift)
+          )
           then
             all_pressed = false
           end
@@ -303,9 +312,6 @@ function dmf.check_keybinds()
               _pressed_key = primary_key
             end
           end
-        end
-        if _pressed_key then
-          break
         end
       end
     end
@@ -355,8 +361,8 @@ function dmf.generate_keybinds()
       }
 
       _keybinds[primary_key] = _keybinds[primary_key] or {
-        check_pressed  = CHECK_INPUT_FUNCTIONS[KEYS_INFO[primary_key][3]].PRESSED,
-        check_released = CHECK_INPUT_FUNCTIONS[KEYS_INFO[primary_key][3]].RELEASED
+        check_pressed  = KEYS_INPUT_FUNCTIONS[primary_key].check_pressed,
+        check_released = KEYS_INPUT_FUNCTIONS[primary_key].check_released
       }
       table.insert(_keybinds[primary_key], keybind_data)
     end
