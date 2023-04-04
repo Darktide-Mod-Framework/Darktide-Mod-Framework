@@ -7,13 +7,13 @@ local _widgets_by_name
 -- ####################################################################################################################
 
 local function load_scrolling_speed_setting()
-  local dmf_scroll_speed = dmf:get("dmf_options_scrolling_speed")
-  if dmf_scroll_speed and _widgets_by_name then
+  if _widgets_by_name then
+    local dmf_scroll_speed = math.clamp((dmf:get("dmf_options_scrolling_speed") or 100) / 1000, 0.05, 0.5)
     if _widgets_by_name["scrollbar"] then
-      _widgets_by_name["scrollbar"].content.scroll_speed = dmf_scroll_speed / 10
+      _widgets_by_name["scrollbar"].content.scroll_amount = dmf_scroll_speed
     end
     if _widgets_by_name["settings_scrollbar"] then
-      _widgets_by_name["settings_scrollbar"].content.scroll_speed = dmf_scroll_speed / 10
+      _widgets_by_name["settings_scrollbar"].content.scroll_amount = dmf_scroll_speed
     end
   end
 end
@@ -844,19 +844,24 @@ end
 
 DMFOptionsView._set_tooltip_data = function (self, widget)
   local current_widget = self._tooltip_data and self._tooltip_data.widget
-  local display_text = nil
+  local localized_text = nil
   local tooltip_text = widget.content.entry.tooltip_text
   local disabled_by_list = widget.content.entry.disabled_by
 
   if tooltip_text then
-    display_text = tooltip_text
+    if type(tooltip_text) == "function" then
+      localized_text = tooltip_text()
+    else
+      -- Should already be localized in mod option generation
+      localized_text = tooltip_text
+    end
   end
 
   if disabled_by_list then
-    display_text = display_text and string.format("%s\n", display_text)
+    localized_text = localized_text and string.format("%s\n", localized_text)
 
     for _, text in pairs(disabled_by_list) do
-      display_text = display_text and string.format("%s\n%s", display_text, text) or text
+      localized_text = localized_text and string.format("%s\n%s", localized_text, text) or text
     end
   end
 
@@ -868,14 +873,14 @@ DMFOptionsView._set_tooltip_data = function (self, widget)
   if current_widget ~= widget or current_widget == widget and new_y ~= current_y then
     self._tooltip_data = {
       widget = widget,
-      text = display_text
+      text = localized_text
     }
-    self._widgets_by_name.tooltip.content.text = display_text
+    self._widgets_by_name.tooltip.content.text = localized_text
     local text_style = self._widgets_by_name.tooltip.style.text
     local x_pos = starting_point[1] + widget.offset[1]
     local width = widget.content.size[1] * 0.5
     local text_options = UIFonts.get_font_options_by_style(text_style)
-    local _, text_height = self:_text_size(display_text, text_style.font_type, text_style.font_size, {
+    local _, text_height = self:_text_size(localized_text, text_style.font_type, text_style.font_size, {
       width,
       0
     }, text_options)

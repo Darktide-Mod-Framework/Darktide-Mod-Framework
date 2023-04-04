@@ -16,7 +16,7 @@ dmf_mod_data.options = {
       setting_id    = "dmf_options_scrolling_speed",
       type          = "numeric",
       default_value = 100,
-      range         = {1, 1000},
+      range         = {50, 500},
       unit_text     = "percent"
     },
     {
