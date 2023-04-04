@@ -262,7 +262,7 @@ DMFOptionsView._setup_content_grid_scrollbar = function (self, grid, widget_id, 
 
   grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id, true)
 
-  -- Scroll the category grid to the default widget
+  -- Scroll the category grid to the default category widget
   if widget_id == "scrollbar" and _last_selected_category_widget then
     local index = grid:index_by_widget(_last_selected_category_widget)
     local scroll_progress = grid:get_scrollbar_percentage_by_index(index)
