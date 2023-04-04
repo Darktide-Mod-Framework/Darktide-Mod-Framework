@@ -45,6 +45,9 @@ local ViewElementKeybindPopup = require("scripts/ui/view_elements/view_element_k
 local CATEGORIES_GRID = 1
 local SETTINGS_GRID = 2
 
+local _last_selected_category_entry
+local _last_selected_category_widget
+
 local DMFOptionsView = class("DMFOptionsView", "BaseView")
 
 DMFOptionsView.init = function (self, settings)
@@ -258,7 +261,16 @@ DMFOptionsView._setup_content_grid_scrollbar = function (self, grid, widget_id, 
   load_scrolling_speed_setting()
 
   grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id, true)
-  grid:set_scrollbar_progress(0)
+
+  -- Scroll the category grid to the default widget
+  if widget_id == "scrollbar" and _last_selected_category_widget then
+    local index = grid:index_by_widget(_last_selected_category_widget)
+    local scroll_progress = grid:get_scrollbar_percentage_by_index(index)
+
+    grid:set_scrollbar_progress(scroll_progress)
+  else
+    grid:set_scrollbar_progress(0)
+  end
 end
 
 DMFOptionsView._setup_offscreen_gui = function (self)
@@ -324,6 +336,11 @@ DMFOptionsView._setup_content_widgets = function (self, content, scenegraph_id, 
       alignment_list[#alignment_list + 1] = widget or {
         size = size
       }
+
+      if entry.display_name == self._default_category then
+        _last_selected_category_entry = entry
+        _last_selected_category_widget = widget
+      end
     end
   end
 
@@ -649,9 +666,8 @@ DMFOptionsView._update_grid_navigation_selection = function (self)
       end
     elseif navigation_widgets or self._settings_content_widgets then
       self:_set_default_navigation_widget()
-    elseif self._default_category then
-      self:present_category_widgets(self._default_category)
     end
+    -- Removed extra condition for default category - moved to on_view_load_complete
   end
 end
 
@@ -661,6 +677,8 @@ DMFOptionsView.present_category_widgets = function (self, category)
   local grid_data = settings_category_widgets[category]
 
   if grid_data then
+    dmf:set("last_selected_option_category", category)
+
     local widgets = {}
     local alignment_widgets = {}
 
@@ -699,7 +717,7 @@ DMFOptionsView._setup_category_config = function (self, config)
     self._category_content_widgets = {}
   end
 
-  local config_categories = config.categories
+  local config_categories = config.categories or {}
   local entries = {}
   local reset_functions_by_category = {}
   local categories_by_display_name = {}
@@ -738,7 +756,16 @@ DMFOptionsView._setup_category_config = function (self, config)
     end
   end
 
-  self._default_category = config_categories[1].display_name
+  -- Retrieve default category from settings
+  local category_setting = dmf:get("last_selected_option_category")
+  if category_setting and not categories_by_display_name[category_setting] then
+    category_setting = false
+  end
+
+  self._default_category = category_setting or (
+    config_categories[1] and config_categories[1].display_name
+  )
+
   local scenegraph_id = "grid_content_pivot"
   local callback_name = "cb_on_category_pressed"
   self._category_content_widgets, self._category_alignment_list = self:_setup_content_widgets(entries, scenegraph_id, callback_name)
@@ -1301,6 +1328,15 @@ DMFOptionsView._set_selected_grid_widget = function (self, widgets, widget_name)
   end
 
   return selected_widget, selected_widget_index
+end
+
+-- Handles navigation to the last selected category widget
+DMFOptionsView._on_view_load_complete = function (self, loaded)
+  DMFOptionsView.super._on_view_load_complete(self, loaded)
+
+  if _last_selected_category_entry and _last_selected_category_widget then
+    self:cb_on_category_pressed(_last_selected_category_widget, _last_selected_category_entry)
+  end
 end
 
 return DMFOptionsView
