@@ -677,7 +677,7 @@ DMFOptionsView.present_category_widgets = function (self, category)
   local grid_data = settings_category_widgets[category]
 
   if grid_data then
-    dmf:set("last_selected_option_category", category)
+    dmf:set("options_menu_last_selected", category)
 
     local widgets = {}
     local alignment_widgets = {}
@@ -757,7 +757,7 @@ DMFOptionsView._setup_category_config = function (self, config)
   end
 
   -- Retrieve default category from settings
-  local category_setting = dmf:get("last_selected_option_category")
+  local category_setting = dmf:get("options_menu_last_selected")
   if category_setting and not categories_by_display_name[category_setting] then
     category_setting = false
   end
