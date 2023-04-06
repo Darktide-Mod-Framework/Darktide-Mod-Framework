@@ -14,7 +14,7 @@ return {
   open_dmf_options_description = {
     en = "Keybind for opening and closing mods options menu.",
     es = "Atajo para abrir/cerrar el menu de configuración de mods.",
-    ru = "Клавиша / сочетание клавиш для открытия и закрытия меню настроек модов.",
+    ru = "Клавиша/сочетание клавиш для открытия и закрытия меню настроек модов.",
     ["zh-cn"] = "打开关闭模组选项菜单的按键绑定。",
   },
   dmf_options_scrolling_speed = {
@@ -28,6 +28,7 @@ return {
     es = "Bienvenidos a el Mod Framework de Darktide. Hemos agregado las opciones de Mod a el menu de opciones.",
     de = "Willkommen beim Darktide Mod Framework. Ein Button für Mod-Optionen wurde dem Hauptmenu hinzugefügt.",
     ["zh-cn"] = "欢迎使用 Darktide Mod Framework。模组选项已添加到选项菜单。",
+    ru = "Добро пожаловать в Darktide Mod Framework. Параметры мода были добавлены в меню параметров.",
   },
   percent = {
     en = "%%",
@@ -35,15 +36,17 @@ return {
   toggle_mods = {
     en = "Toggle Mods",
     ["zh-cn"] = "开启关闭模组",
+    ru = "Включение/выключение модов",
   },
   toggle_mods_description = {
     en = "Enable or disable your mods.",
     ["zh-cn"] = "启用或禁用安装的模组。",
+    ru = "Включите или отключите ваши моды.",
   },
   ui_scaling = {
     en = "UI Scaling for FHD+ Resolutions",
     es = "Reescalado de la interfaz para resoluciones Full HD+",
-    ru = "Нормализация масштаба UI для FHD+ разрешений",
+    ru = "Нормализация масштаба интерфейса для FHD+ разрешений",
     ["zh-cn"] = "高分辨率 UI 缩放",
   },
   ui_scaling_description = {
@@ -135,6 +138,7 @@ return {
   output_mode_notification = {
     en = "'Notification' Output",
     ["zh-cn"] = "'Notification' 通知输出",
+    ru = "Вывод 'Notification'",
   },
   output_mode_echo = {
     en = "'Echo' Output",
@@ -187,6 +191,7 @@ return {
   output_notification = {
     en = "Notification",
     ["zh-cn"] = "通知",
+    ru = "Уведомление",
   },
   output_log_and_chat = {
     en = "Log & Chat",
@@ -197,14 +202,17 @@ return {
   output_all = {
     en = "All",
     ["zh-cn"] = "全部",
+    ru = "Все",
   },
   output_log_and_notification = {
     en = "Log & Notification",
     ["zh-cn"] = "日志与通知",
+    ru = "Лог и Уведомление",
   },
   output_chat_and_notification = {
     en = "Chat & Notification",
     ["zh-cn"] = "聊天与通知",
+    ru = "Чат и Уведомление",
   },
   chat_history_enable = {
     en = "Chat Input History",
@@ -308,6 +316,7 @@ return {
   chat_command_not_recognized = {
     en = "Command not recognized",
     ["zh-cn"] = "无法识别的命令",
+    ru = "Команда не распознана",
   },
   clean_chat_history = {
     en = "cleans chat input history",
@@ -318,6 +327,7 @@ return {
   clean_chat_notifications = {
     en = "cleans chat notification alerts",
     ["zh-cn"] = "清除聊天通知警告",
+    ru = "очищает предупреждения об уведомлениях чата",
   },
   dev_console_opened = {
     en = "Developer console opened.",
@@ -334,6 +344,7 @@ return {
   dev_console_close_warning = {
     en = "The developer console is disabled, but must be closed manually.",
     ["zh-cn"] = "开发者控制台已禁用，但必须手动关闭。",
+    ru = "Консоль разработчика отключена, но ее необходимо закрыть вручную.",
   },
 
 
@@ -343,28 +354,34 @@ return {
     en = "No description provided.",
     es = "No se proporcionó una descripción.",
     ["zh-cn"] = "未提供描述。",
+    ru = "Описание не предоставлено.",
   },
 
   -- Difficulties' names
   lowest = {
     en = "Sedition",
     ["zh-cn"] = "煽动",
+    ru = "Мятеж",
   },
   low = {
     en = "Uprising",
     ["zh-cn"] = "暴乱",
+    ru = "Восстание",
   },
   medium = {
     en = "Malice",
     ["zh-cn"] = "憎恶",
+    ru = "Злоба",
   },
   high = {
     en = "Heresy",
     ["zh-cn"] = "异端",
+    ru = "Ересь",
   },
   highest = {
     en = "Damnation",
     ["zh-cn"] = "诅咒",
+    ru = "Проклятие",
   },
 
   -- Chat messages
@@ -372,37 +389,44 @@ return {
     en = "ENABLED MUTATORS",
     es = "MUTACIONES ACTIVADAS",
     ["zh-cn"] = "启用突变器",
+    ru = "МУТАТОРЫ ВКЛЮЧЕНЫ",
   },
   broadcast_all_disabled = {
     en = "ALL MUTATORS DISABLED",
     es = "TODAS LAS MUTACIONES DESACTIVADAS",
     ["zh-cn"] = "禁用所有突变器",
+    ru = "ВСЕ МУТАТОРЫ ОТКЛЮЧЕНЫ",
   },
   broadcast_disabled_mutators = {
     en = "MUTATORS DISABLED",
     es = "MUTACIONES DESACTIVADAS",
     ["zh-cn"] = "禁用突变器",
+    ru = "МУТАТОРЫ ОТКЛЮЧЕНЫ",
   },
   local_disabled_mutators = {
     en = "Mutators disabled",
     es = "Mutaciones desactivadas",
     ["zh-cn"] = "突变器已禁用",
+    ru = "Мутаторы отключены",
   },
   whisper_enabled_mutators = {
     en = "[Automated message] This lobby has the following mutators active",
     es = "[Mensaje automático] Esta partida tiene las siguientes mutaciones",
     ["zh-cn"] = "[自动消息] 此大厅激活了以下突变器",
+    ru = "[Автоматическое сообщение] В этом лобби активны следующие мутаторы",
   },
 
   disabled_reason_not_server = {
     en = "because you're no longer the host",
     es = "porque ya no eres el anfitrión",
     ["zh-cn"] = "因为你不再是主机",
+    ru = "потому что вы больше не хост",
   },
   disabled_reason_difficulty_change = {
     en = "DUE TO CHANGE IN DIFFICULTY",
     es = "DEBIDO A UN CAMBIO DE DIFICULTAD",
     ["zh-cn"] = "由于难度变更",
+    ru = "ИЗ-ЗА ИЗМЕНЕНИЯ СЛОЖНОСТИ",
   },
 
   -- Interface
@@ -410,21 +434,25 @@ return {
     en = "Mutators",
     es = "Mutaciones",
     ["zh-cn"] = "突变器",
+    ru = "Мутаторы",
   },
   mutators_banner_description = {
     en = "Enable and disable mutators",
     es = "Activa y desactiva las mutaciones",
     ["zh-cn"] = "启用和禁用突变器",
+    ru = "Включить и отключить мутаторы",
   },
   no_mutators = {
     en = "No mutators installed",
     es = "No hay mutaciones instaladas",
     ["zh-cn"] = "未安装突变器",
+    ru = "Нет установленных мутаторов",
   },
   no_mutators_description = {
     en = "Subscribe to mods and mutators on the workshop",
     es = "Subscribete a mutaciones en el Steam Workshop",
     ["zh-cn"] = "在创意工坊订阅模组和突变器",
+    ru = "Подпишитесь на моды и мутаторы в мастерской Steam",
   },
 
   -- Mutator widgets' tooltips
@@ -432,53 +460,63 @@ return {
     en = "\n\n-- INCOMPATIBLE WITH MUTATORS --\n",
     es = "\n\n-- INCOMPATIBLE CON LAS MUTACIONES --\n",
     ["zh-cn"] = "\n\n-- 不兼容突变器 --\n",
+    ru = "\n\n-- НЕСОВМЕСТИМО С МУТАТОРАМИ --\n",
   },
   tooltip_compatible_mutators = {
     en = "\n\n-- COMPATIBLE ONLY WITH MUTATORS --\n",
     es = "\n\n-- COMPATIBLE CON LAS MUTACIONES --\n",
     ["zh-cn"] = "\n\n-- 仅兼容突变器 --\n",
+    ru = "\n\n-- СОВМЕСТИМО ТОЛЬКО С МУТАТОРАМИ --\n",
   },
   tooltip_compatible_with_all_mutators = {
     en = "\n\n-- COMPATIBLE WITH ALL MUTATORS --",
     es = "\n\n-- COMPATIBLE CON TODAS LAS MUTACIONES --",
     ["zh-cn"] = "\n\n-- 兼容所有突变器 --\n",
+    ru = "\n\n-- СОВМЕСТИМО СО ВСЕМИ МУТАТОРАМИ --\n",
   },
   tooltip_incompatible_with_all_mutators = {
     en = "\n\n-- INCOMPATIBLE WITH ALL MUTATORS --",
     es = "\n\n-- INCOMPATIBLE CON TODAS LAS MUTACIONES --",
     ["zh-cn"] = "\n\n-- 不兼容所有突变器 --\n",
+    ru = "\n\n-- НЕСОВМЕСТИМО СО ВСЕМИ МУТАТОРАМИ --\n",
   },
 
   tooltip_incompatible_diffs = {
     en = "\n\n-- INCOMPATIBLE WITH DIFFICULTIES --\n",
     es = "\n\n-- INCOMPATIBLE CON LAS DIFICULTADES --\n",
     ["zh-cn"] = "\n\n-- 不兼容难度 --\n",
+    ru = "\n\n-- НЕСОВМЕСТИМО СО СЛОЖНОСТЯМИ --\n",
   },
   tooltip_compatible_diffs = {
     en = "\n\n-- COMPATIBLE ONLY WITH DIFFICULTIES --\n",
     es = "\n\n-- COMPATIBLE CON LAS DIFICULTADES --\n",
     ["zh-cn"] = "\n\n-- 仅兼容难度 --\n",
+    ru = "\n\n-- СОВМЕСТИМО ТОЛЬКО СО СЛОЖНОСТЯМИ --\n",
   },
   tooltip_compatible_with_all_diffs = {
     en = "\n\n-- COMPATIBLE WITH ALL DIFFICULTIES --",
     es = "\n\n-- COMPATIBLE CON TODAS LAS DIFICULTADES --",
     ["zh-cn"] = "\n\n-- 兼容所有难度 --\n",
+    ru = "\n\n-- СОВМЕСТИМО СО ВСЕМИ СЛОЖНОСТЯМИ --\n",
   },
 
   tooltip_conflicts = {
     en = "\n\n-- CONFLICTS --\n",
     es = "\n\n-- CONFLICTOS --\n",
     ["zh-cn"] = "\n\n-- 冲突 --\n",
+    ru = "\n\n-- КОНФЛИКТЫ --\n",
   },
 
   tooltip_append_mutator = {
     en = " (mutator)",
     es = " (mutacion)",
     ["zh-cn"] = "（突变）",
+    ru = " (мутатор)",
   },
   tooltip_append_difficulty = {
     en = " (difficulty)",
     es = " (dificultad)",
     ["zh-cn"] = "（难度）",
+    ru = " (сложность)",
   },
 }
