@@ -3,15 +3,15 @@ local dmf = get_mod("DMF")
 local InputUtils = require("scripts/managers/input/input_utils")
 
 local MODIFIER_KEYS = {
-  ["left shift"]  = {160, "shift", "keyboard", 161},
-  ["right shift"] = {160, "shift", "keyboard", 161},
-  ["shift"]       = {160, "shift", "keyboard", 161},
-  ["left ctrl"]   = {162, "ctrl",  "keyboard", 163},
-  ["right ctrl"]  = {162, "ctrl",  "keyboard", 163},
-  ["ctrl"]        = {162, "ctrl",  "keyboard", 163},
-  ["left alt"]    = {164, "alt",   "keyboard", 165},
-  ["right alt"]   = {164, "alt",   "keyboard", 165},
-  ["alt"]         = {164, "alt",   "keyboard", 165},
+  ["keyboard_left shift"]  = {160, "shift", "keyboard", 161},
+  ["keyboard_right shift"] = {160, "shift", "keyboard", 161},
+  ["keyboard_shift"]       = {160, "shift", "keyboard", 161},
+  ["keyboard_left ctrl"]   = {162, "ctrl",  "keyboard", 163},
+  ["keyboard_right ctrl"]  = {162, "ctrl",  "keyboard", 163},
+  ["keyboard_ctrl"]        = {162, "ctrl",  "keyboard", 163},
+  ["keyboard_left alt"]    = {164, "alt",   "keyboard", 165},
+  ["keyboard_right alt"]   = {164, "alt",   "keyboard", 165},
+  ["keyboard_alt"]         = {164, "alt",   "keyboard", 165},
 }
 
 -- Both are treated equally in keybinds, but these global keys aren't localized
@@ -147,14 +147,7 @@ local ACTION_TYPES = {
 
 local function _enabler_func(cb, action_type, enablers)
   for _, enabler in ipairs(enablers) do
-    local held
-    if MODIFIER_KEYS[enabler] then
-      held = is_modifier_pressed(enabler)
-    else
-      held = enabler.device:held(enabler.index)
-    end
-
-    if not held then
+    if not enabler.device:held(enabler.index) then
       return ACTION_TYPES[action_type].default_device_func()
     end
   end
@@ -165,14 +158,7 @@ end
 
 local function _disabler_func(cb, action_type, disablers)
   for _, disabler in ipairs(disablers) do
-    local held
-    if MODIFIER_KEYS[disabler] then
-      held = is_modifier_pressed(disabler)
-    else
-      held = disabler.device:held(disabler.index)
-    end
-
-    if held then
+    if disabler.device:held(disabler.index) then
       return ACTION_TYPES[action_type].default_device_func()
     end
   end
@@ -191,7 +177,8 @@ local function get_corresponding_device(key_id)
       if index then
         return {
           device = device,
-          index = index
+          index = index,
+          key_id = key_id,
         }
       end
 
@@ -199,7 +186,8 @@ local function get_corresponding_device(key_id)
       if index then
         return {
           device = device,
-          index = index
+          index = index,
+          key_id = key_id,
         }
       end
     end
@@ -280,9 +268,9 @@ end
 -- #####################################################################################################################
 
 -- Checks for pressed and released keybinds, performs keybind actions.
--- * Checks for both right and left key modifiers (ctrl, alt, shift).
--- * If several mods bound the same keys, keybind action will be performed for all of them when keybind is pressed.
--- * Keybind is considered released when it was previously pressed and is now no longer held.
+-- * Right and left key modifiers (ctrl, alt, shift) are checked separately.
+-- * If several mods bound the same keys, keybind action will be performed for all of them when pressed.
+-- * Keybind is considered released when it was previously pressed and is no longer.
 function dmf.check_keybinds()
 
   -- For every keybind
@@ -364,7 +352,7 @@ end
 
 -- Creates DMF input service. It is required to know when non-global keybinds can be triggered.
 -- (Called every time a level is loaded, or on mods reload)
-  -- @TODO: Link this input service to the player's input service and find some way to see if it's blocked
+-- @TODO: Link this input service to the player's input service and find some way to see if it's blocked
 function dmf.create_keybinds_input_service()
   -- -- To create the DMF input service in Darktide
   -- local input_manager = Managers.input
