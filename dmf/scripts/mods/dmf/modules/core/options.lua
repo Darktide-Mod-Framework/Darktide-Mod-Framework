@@ -534,18 +534,23 @@ local function initialize_default_settings_and_keybinds(mod, initialized_widgets
       mod:set(data.setting_id, data.default_value)
     end
     if data.type == "keybind" then
-      dmf.add_mod_keybind(
-        mod,
-        data.setting_id,
-        {
-          global          = data.keybind_global,
-          trigger         = data.keybind_trigger,
-          type            = data.keybind_type,
-          keys            = mod:get(data.setting_id),
-          function_name   = data.function_name,
-          view_name       = data.view_name
-        }
-      )
+      local keywatch_result = dmf.local_keys_to_keywatch_result(mod:get(data.setting_id))
+      if keywatch_result and keywatch_result.main then
+        dmf.add_mod_keybind(
+          mod,
+          data.setting_id,
+          {
+            global          = data.keybind_global,
+            trigger         = data.keybind_trigger,
+            type            = data.keybind_type,
+            main            = keywatch_result.main,
+            enablers        = keywatch_result.enablers,
+            disablers       = keywatch_result.disablers,
+            function_name   = data.function_name,
+            view_name       = data.view_name
+          }
+        )
+      end
     end
   end
 end

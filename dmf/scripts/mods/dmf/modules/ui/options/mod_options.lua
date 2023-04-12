@@ -6,11 +6,13 @@ local _type_template_map = {}
 
 local _devices = {
   "keyboard",
-  "mouse"
+  "mouse",
 }
+
 local _cancel_keys = {
   "keyboard_esc"
 }
+
 local _reserved_keys = {}
 
 local ERRORS = {
@@ -249,8 +251,8 @@ _type_template_map["dropdown"] = create_dropdown_template
 -- ######### Keybind #########
 -- ###########################
 
-local set_keybind = function (self, keybind_data, keys)
-  keybind_data.keys = keys
+local set_keybind = function (self, keybind_data, keywatch_result)
+  keybind_data.keys = keywatch_result
 
   local mod = get_mod(keybind_data.mod_name)
   dmf.add_mod_keybind(
@@ -260,18 +262,19 @@ local set_keybind = function (self, keybind_data, keys)
       global          = keybind_data.keybind_global,
       trigger         = keybind_data.keybind_trigger,
       type            = keybind_data.keybind_type,
-      keys            = keybind_data.keys,
+      main            = keywatch_result.main,
+      enablers        = keywatch_result.enablers,
+      disablers       = keywatch_result.disablers,
       function_name   = keybind_data.function_name,
       view_name       = keybind_data.view_name,
     }
   )
-  mod:set(keybind_data.setting_id, keybind_data.keys, true)
+  mod:set(keybind_data.setting_id, dmf.keywatch_result_to_local_keys(keywatch_result), true)
 end
 
 
 -- Create keybind template
 local create_keybind_template = function (self, params)
-
   local template = {
     widget_type = "keybind",
     service_type = "Ingame",
@@ -287,8 +290,8 @@ local create_keybind_template = function (self, params)
     indentation_level = params.depth,
     mod_name = params.mod_name,
     setting_id = params.setting_id,
-    keys = dmf.keys_to_keybind_result(params.keys),
-    default_value = dmf.keys_to_keybind_result(params.default_value) or {},
+    keys = dmf.local_keys_to_keywatch_result(params.keys),
+    default_value = dmf.local_keys_to_keywatch_result(params.default_value) or {},
 
     on_activated = function (new_value, old_value)
 
@@ -320,11 +323,11 @@ local create_keybind_template = function (self, params)
       end
 
       -- Get the keys of the new value
-      local keys = dmf.keybind_result_to_keys(new_value)
+      local keys = dmf.keywatch_result_to_local_keys(new_value)
 
       -- Set the new keybind unless it would unbind the mod options menu
       if keys and #keys > 0 or params.setting_id ~= "open_dmf_options" then
-        set_keybind(self, params, keys)
+        set_keybind(self, params, new_value)
         return true
       end
 
@@ -332,10 +335,10 @@ local create_keybind_template = function (self, params)
     end,
 
     get_function = function (template)
-      local keys = get_mod(template.mod_name):get(template.setting_id)
-      local keybind_result = dmf.keys_to_keybind_result(keys)
+      local saved_keys = get_mod(template.mod_name):get(template.setting_id)
+      local keywatch_result = dmf.local_keys_to_keywatch_result(saved_keys)
 
-      return keybind_result
+      return keywatch_result
     end,
   }
 
@@ -397,14 +400,14 @@ end
 
 -- Insert a new item into a table before any items that pass the item_tester function
 local function insert_before(tbl, item_tester, new_item)
-	local copy = {}
-	for _, item in ipairs(tbl) do
-		if item_tester(item) then
-			table.insert(copy, new_item)
-		end
-		table.insert(copy, item)
-	end
-	return copy
+  local copy = {}
+  for _, item in ipairs(tbl) do
+    if item_tester(item) then
+      table.insert(copy, new_item)
+    end
+    table.insert(copy, item)
+  end
+  return copy
 end
 
 
@@ -425,16 +428,16 @@ dmf:add_global_localize_strings({
 })
 
 local dmf_option_definition = {
-	text = "mods_options",
-	type = "button",
-	icon = "content/ui/materials/icons/system/escape/settings",
-	trigger_function = function()
-		local context = {
-			can_exit = true,
-		}
-		local view_name = "dmf_options_view"
-		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-	end,
+  text = "mods_options",
+  type = "button",
+  icon = "content/ui/materials/icons/system/escape/settings",
+  trigger_function = function()
+    local context = {
+      can_exit = true,
+    }
+    local view_name = "dmf_options_view"
+    Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+  end,
 }
 
 local function is_options_button(item)

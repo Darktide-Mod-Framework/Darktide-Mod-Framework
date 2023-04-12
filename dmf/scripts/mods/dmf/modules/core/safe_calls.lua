@@ -87,7 +87,7 @@ function dmf.safe_call_dofile(mod, error_prefix_data, file_path)
     show_error(mod, error_prefix_data, "file path should be a string.")
     return false
   end
-  return dmf.safe_call(mod, error_prefix_data, dofile, mod, file_path)
+  return dmf.safe_call(mod, error_prefix_data, dofile, file_path)
 end
 
 
