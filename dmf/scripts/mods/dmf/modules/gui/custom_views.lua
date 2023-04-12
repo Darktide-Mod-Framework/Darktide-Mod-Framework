@@ -7,6 +7,8 @@ local _custom_views_data = {}
 local _ingame_ui
 local _loaded_views = {}
 
+local _key_watch = false
+
 local ERRORS = {
   THROWABLE = {
     -- inject_view:
@@ -312,13 +314,13 @@ end
 
 
 -- Track the creation of the view loader
-dmf:hook_safe(ViewLoader, "init", function()
+dmf:hook_safe(CLASS.ViewLoader, "init", function()
   _custom_view_persistent_data.loader_initialized = true
 end)
 
 
 -- Track the loading of views, set the loader flag if class selection is reached
-dmf:hook_safe(UIManager, "load_view", function(self, view_name)
+dmf:hook_safe(CLASS.UIManager, "load_view", function(self, view_name)
   if view_name == "class_selection_view" then
     _custom_view_persistent_data.loader_initialized = true
   end
@@ -326,19 +328,29 @@ dmf:hook_safe(UIManager, "load_view", function(self, view_name)
 end)
 
 -- Track the unloading of views
-dmf:hook_safe(UIManager, "unload_view", function(self, view_name)
+dmf:hook_safe(CLASS.UIManager, "unload_view", function(self, view_name)
   _loaded_views[view_name] = nil
 end)
 
 
 -- Store the view handler for later use and inject views
-dmf:hook_safe(UIViewHandler, "init", function(self)
+dmf:hook_safe(CLASS.UIViewHandler, "init", function(self)
   _ingame_ui = self
   for view_name, _ in pairs(_custom_views_data) do
     if not dmf.safe_call_nrc(self, {ERRORS.PREFIX.ingameui_hook_injection, view_name}, inject_view, view_name) then
       _custom_views_data[view_name] = nil
     end
   end
+end)
+
+-- Track the start of key watches
+dmf:hook_safe(CLASS.InputManager, "start_key_watch", function(self)
+  _key_watch = true
+end)
+
+-- Track the end of key watches
+dmf:hook_safe(CLASS.InputManager, "stop_key_watch", function(self)
+  _key_watch = false
 end)
 
 -- #####################################################################################################################
@@ -368,8 +380,8 @@ function dmf.keybind_toggle_view(mod, view_name, keybind_transition_data, can_pe
     -- If the view is open, this is a toggle close
     if Managers.ui:view_active(view_name) then
 
-      -- Don't close the view if it's already closing
-      if not Managers.ui:is_view_closing(view_name) then
+      -- Don't close the view if it's already closing or we have an active key watch
+      if not Managers.ui:is_view_closing(view_name) and not _key_watch then
         local force_close = true
         Managers.ui:close_view(view_name, force_close)
       end
