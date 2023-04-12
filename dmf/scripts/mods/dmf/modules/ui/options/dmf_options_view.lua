@@ -228,7 +228,7 @@ DMFOptionsView._restart_popup_info = function (self)
         close_on_pressed = true,
         callback = callback(function ()
           self._popup_id = nil
-          local view_name = "options_view"
+          local view_name = "dmf_options_view"
           self._require_restart = false
 
           Managers.ui:close_view(view_name)
