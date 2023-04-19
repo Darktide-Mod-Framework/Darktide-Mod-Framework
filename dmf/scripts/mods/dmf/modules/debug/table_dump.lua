@@ -71,7 +71,11 @@ DMFMod.dump = function (self, dumped_object, dumped_object_name, max_depth)
   max_depth = max_depth or 1
 
   if object_type ~= "table" then
-    local error_message = "(dump): \"object_name\" is not a table. It's " .. object_type
+		local error_message = string.format(
+			'(dump): "%s" is not a table but of type "%s"',
+			dumped_object_name or "Dump object",
+			object_type
+		)
 
     if object_type ~= "nil" then
       error_message = error_message .. " (" .. tostring(dumped_object) .. ")"
@@ -349,7 +353,11 @@ DMFMod.dump_to_file = function (self, dumped_object, object_name, max_depth)
   max_depth = max_depth or 1
 
   if object_type ~= "table" then
-    local error_message = "(dump_to_file): \"object_name\" is not a table. It's " .. object_type
+		local error_message = string.format(
+			'(dump_to_file): "%s" is not a table but of type "%s"',
+			object_name or "Dump object",
+			object_type
+		)
 
     if object_type ~= "nil" then
       error_message = error_message .. " (" .. tostring(dumped_object) .. ")"
