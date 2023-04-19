@@ -61,14 +61,14 @@ local function table_dump(key, value, depth, max_depth)
 end
 
 DMFMod.dump = function (self, dumped_object, dumped_object_name, max_depth)
-
   if dmf.check_wrong_argument_type(self, "dump", "dumped_object_name", dumped_object_name, "string", "nil") or
-     dmf.check_wrong_argument_type(self, "dump", "max_depth", max_depth, "number")
+     dmf.check_wrong_argument_type(self, "dump", "max_depth", max_depth, "number", "nil")
   then
     return
   end
 
   local object_type = type(dumped_object)
+  max_depth = max_depth or 1
 
   if object_type ~= "table" then
     local error_message = "(dump): \"object_name\" is not a table. It's " .. object_type
@@ -83,11 +83,6 @@ DMFMod.dump = function (self, dumped_object, dumped_object_name, max_depth)
 
   if dumped_object_name then
     log_and_console_print(string.format("<%s>", dumped_object_name))
-  end
-
-  if not max_depth then
-    self:error("(dump): maximum depth is not specified")
-    return
   end
 
   local success, error_message = pcall(function()
@@ -344,13 +339,14 @@ end
 
 DMFMod.dump_to_file = function (self, dumped_object, object_name, max_depth)
   if dmf.check_wrong_argument_type(self, "dump_to_file", "object_name", object_name, "string", "nil") or
-     dmf.check_wrong_argument_type(self, "dump_to_file", "max_depth", max_depth, "number")
+     dmf.check_wrong_argument_type(self, "dump_to_file", "max_depth", max_depth, "number", "nil")
   then
     return
   end
 
   local object_type = type(dumped_object)
   object_name = object_name or "mod_dump_to_file"
+  max_depth = max_depth or 1
 
   if object_type ~= "table" then
     local error_message = "(dump_to_file): \"object_name\" is not a table. It's " .. object_type
