@@ -106,11 +106,6 @@ DMFMod.dump = function (self, dumped_object, dumped_object_name, max_depth)
 end
 
 
-
-
-
-
-
 local function table_dump_to_file(dumped_table, dumped_table_name, max_depth)
 
   -- #####################
@@ -348,14 +343,14 @@ end
 
 
 DMFMod.dump_to_file = function (self, dumped_object, object_name, max_depth)
-
-  if dmf.check_wrong_argument_type(self, "dump_to_file", "object_name", object_name, "string") or
+  if dmf.check_wrong_argument_type(self, "dump_to_file", "object_name", object_name, "string", "nil") or
      dmf.check_wrong_argument_type(self, "dump_to_file", "max_depth", max_depth, "number")
   then
     return
   end
 
   local object_type = type(dumped_object)
+  object_name = object_name or "mod_dump_to_file"
 
   if object_type ~= "table" then
     local error_message = "(dump_to_file): \"object_name\" is not a table. It's " .. object_type
