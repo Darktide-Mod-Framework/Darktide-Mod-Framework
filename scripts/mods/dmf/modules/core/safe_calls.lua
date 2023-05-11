@@ -15,7 +15,7 @@ end
 local function print_error_callstack(error_message)
   if type(error_message) == "table" and error_message.error then
     print(string.format(
-        "<<Script Error>>%s<<Script Error>>\n<<Lua Stack>>%s<</Lua Stack>>\n<<Lua Locals>>%s<</Lua Locals>>\n<<Lua Self>>%s<</Lua Self>>",
+        "<<Script Error>>%s<</Script Error>>\n<<Lua Stack>>%s<</Lua Stack>>\n<<Lua Locals>>%s<</Lua Locals>>\n<<Lua Self>>%s<</Lua Self>>",
         error_message.error, error_message.traceback, error_message.locals, error_message.self
     ))
   else
