@@ -224,7 +224,7 @@ DMFOptionsView._restart_popup_info = function (self)
     description_text = "loc_popup_settings_require_restart_description",
     options = {
       {
-        text = "loc_confirm",
+        text = "loc_dmf_restart",
         close_on_pressed = true,
         callback = callback(function ()
           self._popup_id = nil
@@ -233,6 +233,16 @@ DMFOptionsView._restart_popup_info = function (self)
 
           Managers.ui:close_view(view_name)
         end)
+      },
+      {
+        text = "loc_dmf_restart_later",
+        close_on_pressed = true,
+        hotkey = "back",
+        callback = function ()
+          self._popup_id = nil
+
+          Managers.ui:close_view("dmf_options_view")
+        end
       }
     }
   }

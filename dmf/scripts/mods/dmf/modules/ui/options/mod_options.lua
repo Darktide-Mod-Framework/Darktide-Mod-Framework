@@ -421,7 +421,13 @@ dmf:add_global_localize_strings({
     es = "Configuración de mods",
     ru = "Настройки модов",
     ["zh-cn"] = "模组选项",
-  }
+  },
+	loc_dmf_restart = {
+		en = "Restart",
+	},
+	loc_dmf_restart_later = {
+		en = "Understood, restart later",
+	},
 })
 
 local dmf_option_definition = {
