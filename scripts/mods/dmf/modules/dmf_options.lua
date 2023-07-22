@@ -257,24 +257,26 @@ end
 -- ##### Script #######################################################################################################
 -- ####################################################################################################################
 
-dmf.initialize_mod_data(dmf, dmf_mod_data)
+dmf.initialize_options = function()
+  dmf.initialize_mod_data(dmf, dmf_mod_data)
 
--- first DMF initialization
--- it will be run only 1 time, when the player launch the game with DMF for the first time
-if not dmf:get("dmf_initialized") then
+  -- first DMF initialization
+  -- it will be run only 1 time, when the player launch the game with DMF for the first time
+  if not dmf:get("dmf_initialized") then
 
-  dmf.load_logging_settings()
-  dmf.load_developer_mode_settings()
-  dmf.load_network_settings()
-  dmf.load_custom_textures_settings()
-  dmf.load_dev_console_settings()
-  dmf.load_chat_history_settings()
+    dmf.load_logging_settings()
+    dmf.load_developer_mode_settings()
+    dmf.load_network_settings()
+    dmf.load_custom_textures_settings()
+    dmf.load_dev_console_settings()
+    dmf.load_chat_history_settings()
 
-  -- Not necessary until the view is loaded
-  if dmf.load_dmf_options_view_settings then
-    dmf.load_dmf_options_view_settings()
+    -- Not necessary until the view is loaded
+    if dmf.load_dmf_options_view_settings then
+      dmf.load_dmf_options_view_settings()
+    end
+
+    dmf:notify(dmf:localize("dmf_first_run_notification"))
+    dmf:set("dmf_initialized", true)
   end
-
-  dmf:notify(dmf:localize("dmf_first_run_notification"))
-  dmf:set("dmf_initialized", true)
 end

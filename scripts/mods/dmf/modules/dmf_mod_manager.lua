@@ -170,11 +170,13 @@ function dmf.initialize_mod_data(mod, mod_data)
 
   -- Mod's options initialization
   if mod_data.options or (not mod_data.is_mutator and not mod_data.options_widgets) then
-    local success, error_message = pcall(dmf.initialize_mod_options, mod, mod_data.options)
-    if not success then
-      mod:error(ERRORS.REGULAR.mod_options_initializing_failed, error_message)
-      return
-    end
+    dmf.safe_call(
+        dmf,
+        ERRORS.REGULAR.mod_options_initializing_failed,
+        dmf.initialize_mod_options,
+        mod,
+        mod_data.options
+    )
   end
 
   -- Textures initialization @TODO: move to a separate function

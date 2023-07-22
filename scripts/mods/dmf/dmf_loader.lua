@@ -97,6 +97,13 @@ end
 
 function dmf_mod_object:on_game_state_changed(status, state)
   print("DMF:ON_GAME_STATE_CHANGED(), status: " .. tostring(status) .. ", state: " .. tostring(state))
+
+  -- Certain intialization procedures need to be delayed until the game's core systems are
+  -- fully initialized and running
+  if status == "enter" and state == "StateTitle" then
+    dmf.initialize_options()
+  end
+
   dmf.mods_game_state_changed_event(status, state)
   dmf.save_unsaved_settings_to_file()
   dmf.apply_delayed_hooks()
