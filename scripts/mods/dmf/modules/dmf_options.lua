@@ -249,8 +249,12 @@ dmf.on_setting_changed = function (setting_id)
 end
 
 dmf.load_developer_mode_settings = function () --@TODO: maybe move it to somewhere else?
-  Managers.mod._settings.developer_mode = dmf:get("developer_mode")
   Application.set_user_setting("mod_manager_settings", Managers.mod._settings)
+
+  local mod_manager = Managers.mod
+  if mod_manager and mod_manager.set_developer_mode then
+    mod_manager:set_developer_mode(dmf:get("developer_mode"))
+  end
 end
 
 -- ####################################################################################################################
@@ -279,4 +283,10 @@ dmf.initialize_options = function()
     dmf:notify(dmf:localize("dmf_first_run_notification"))
     dmf:set("dmf_initialized", true)
   end
+end
+
+-- If we're already in the game (likely a mod reload), we
+-- can run the initialization immediately.
+if Main._sm:current_state_name() == "StateGame" then
+  dmf.initialize_options()
 end

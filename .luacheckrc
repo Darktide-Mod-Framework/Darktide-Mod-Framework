@@ -39,7 +39,7 @@ stds["DT"] = {
             "easeOutCubic", "radian_lerp", "auto_lerp", "rand_utf8_string", "point_is_inside_oobb",
         }},
         Managers = { fields = {
-            "mod", "event"
+            "mod", "event", "ui",
         }},
         Mods = { fields = {
             lua = { fields = { "debug", "io", "ffi", "os" }},
@@ -47,6 +47,6 @@ stds["DT"] = {
             "require_store",
         }},
         "Crashify","Keyboard","Mouse","Application","Color","Quarternion","Vector3","Vector2","RESOLUTION_LOOKUP",
-        "ModManager", "Utf8",
+        "ModManager", "Utf8", "Main",
     },
 }
