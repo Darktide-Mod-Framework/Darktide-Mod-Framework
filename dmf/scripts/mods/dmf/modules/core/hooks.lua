@@ -20,6 +20,12 @@ local HOOK_TYPE_ORIGIN = 3
 local _delayed_hooks = {}
 local _delaying_enabled = true
 
+-- input:get() functions
+local _input_get_functions = {
+    _get          = true,
+    _get_simulate = true,
+}
+
 -- This metatable will automatically create a table entry if one doesnt exist.
 -- This lets us easily do _registry[mod] without having to worry about nil-checking it.
 local auto_table_meta = {__index = function(t, k) t[k] = {} return t[k] end }
@@ -238,6 +244,10 @@ local function create_hook(mod, orig, obj, method, handler, func_name, hook_type
             mod:warning("(%s): Attempting to rehook active hook [%s].", func_name, method)
         end
     end
+
+    if _input_get_functions[method] then
+        dmf._input_service_hooked = false
+    end
 end
 
 -- Applies delayed hooks set for the given object name.
@@ -376,6 +386,10 @@ local function generic_hook_toggle(mod, obj, method, enabled_state)
 
     if _registry[mod][obj[method]] then
         _registry[mod][obj[method]].active = enabled_state
+
+        if _input_get_functions[method] and enabled_state then
+            dmf._input_service_hooked = false
+        end
     else
         -- This has the potential for mod-breaking behavior, but not guaranteed
         mod:warning("(%s): trying to toggle hook that doesn't exist: %s", func_name, method)
@@ -389,6 +403,9 @@ local function toggle_all_hooks_for_mod(mod, enabled_state)
     end
     for _, hook_data in pairs(_registry[mod]) do
         hook_data.active = enabled_state
+    end
+    if enabled_state then
+        dmf._input_service_hooked = false
     end
 end
 
@@ -532,4 +549,29 @@ dmf:hook(_G, "class", function(func, class_name, ...)
         end)
     end
     return class_object
+end)
+
+-- Track simulated action start
+dmf:hook_safe(CLASS.InputService, "start_simulate_action", function (self)
+    self._is_simulating = true
+end)
+
+-- Track simulated action stop
+dmf:hook_safe(CLASS.InputService, "stop_simulate_action", function (self)
+    self._is_simulating = not table.is_empty(self._simulated_actions)
+end)
+
+-- Refresh input:get() hooks as necessary
+dmf:hook_safe(CLASS.InputManager, "update", function (self)
+    if not dmf._input_service_hooked then
+        for _, service in pairs(self._input_services) do
+            if service._is_simulating or (service._is_simulating == nil and (service.get == service._get_simulate)) then
+                service.get = service._get_simulate
+            else
+                service.get = service._get
+            end
+        end
+
+        dmf._input_service_hooked = true
+    end
 end)
