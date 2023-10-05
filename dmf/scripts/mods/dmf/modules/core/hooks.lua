@@ -20,7 +20,7 @@ local HOOK_TYPE_ORIGIN = 3
 local _delayed_hooks = {}
 local _delaying_enabled = true
 
--- input:get() functions
+-- Functions referenced by input:get()
 local _input_get_functions = {
     _get          = true,
     _get_simulate = true,
@@ -246,7 +246,7 @@ local function create_hook(mod, orig, obj, method, handler, func_name, hook_type
     end
 
     if _input_get_functions[method] then
-        dmf._input_service_hooked = false
+        dmf._input_services_hooked = false
     end
 end
 
@@ -388,7 +388,7 @@ local function generic_hook_toggle(mod, obj, method, enabled_state)
         _registry[mod][obj[method]].active = enabled_state
 
         if _input_get_functions[method] and enabled_state then
-            dmf._input_service_hooked = false
+            dmf._input_services_hooked = false
         end
     else
         -- This has the potential for mod-breaking behavior, but not guaranteed
@@ -405,7 +405,7 @@ local function toggle_all_hooks_for_mod(mod, enabled_state)
         hook_data.active = enabled_state
     end
     if enabled_state then
-        dmf._input_service_hooked = false
+        dmf._input_services_hooked = false
     end
 end
 
@@ -561,17 +561,13 @@ dmf:hook_safe(CLASS.InputService, "stop_simulate_action", function (self)
     self._is_simulating = not table.is_empty(self._simulated_actions)
 end)
 
--- Refresh input:get() hooks as necessary
+-- Refresh input:get() hooks
 dmf:hook_safe(CLASS.InputManager, "update", function (self)
-    if not dmf._input_service_hooked then
+    if not dmf._input_services_hooked then
         for _, service in pairs(self._input_services) do
-            if service._is_simulating or (service._is_simulating == nil and (service.get == service._get_simulate)) then
-                service.get = service._get_simulate
-            else
-                service.get = service._get
-            end
+            service.get = service._is_simulating and service._get_simulate or service._get
         end
 
-        dmf._input_service_hooked = true
+        dmf._input_services_hooked = true
     end
 end)
