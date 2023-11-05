@@ -17,6 +17,25 @@ end
 -- Global backup of original print() method
 local print = __print
 
+local function sorted_pairs(t)
+  local index = table.keys(t)
+  table.sort(index, function(a, b)
+    local ta = type(a)
+    if ta == type(b) then
+      return a < b
+    elseif ta == "number" then
+      return true
+    else
+      return false
+    end
+  end)
+  local i = 0
+  return function()
+    i = i + 1
+    return index[i], t[index[i]]
+  end
+end
+
 local function log_and_console_print(message, ...)
   print(message, ...)
   CommandWindow.print(message, ...)
@@ -35,7 +54,7 @@ local function table_dump(key, value, depth, max_depth)
 
     log_and_console_print(prefix .. "table")
 
-    for key_, value_ in pairs(value) do
+    for key_, value_ in sorted_pairs(value) do
       table_dump(key_, value_, depth + 1, max_depth)
     end
 
@@ -46,7 +65,7 @@ local function table_dump(key, value, depth, max_depth)
         log_and_console_print(prefix .. "protected metatable")
       else
         log_and_console_print(prefix .. "metatable")
-        for key_, value_ in pairs(meta) do
+        for key_, value_ in sorted_pairs(meta) do
           if key_ ~= "__index" and key_ ~= "super" then
             table_dump(key_, value_, depth + 1, max_depth)
           end
@@ -90,7 +109,7 @@ DMFMod.dump = function (self, dumped_object, object_name, max_depth)
   end
 
   local success, error_message = pcall(function()
-    for key, value in pairs(dumped_object) do
+    for key, value in sorted_pairs(dumped_object) do
       table_dump(key, value, 0, max_depth)
     end
   end)
@@ -159,7 +178,7 @@ local function table_dump_to_file(dumped_table, dumped_table_name, max_depth)
 
     local function parse_table(table_entry, parsed_table)
 
-      for key, value in pairs(parsed_table) do
+      for key, value in sorted_pairs(parsed_table) do
 
         if key ~= "__index" then
 
@@ -212,7 +231,7 @@ local function table_dump_to_file(dumped_table, dumped_table_name, max_depth)
     end
 
     -- parsing all the tables in 'parsing_queue' for the current depth level
-    for _, parsed_table in pairs(parsing_queue[i]) do
+    for _, parsed_table in sorted_pairs(parsing_queue[i]) do
 
       current_entry = reached_tables[tostring(parsed_table)]
 
@@ -263,7 +282,7 @@ local function table_dump_to_file(dumped_table, dumped_table_name, max_depth)
 
       file:write(prefix2 .. '"table": {\n')
 
-      for key, value in pairs(table_entry[3]) do
+      for key, value in sorted_pairs(table_entry[3]) do
 
         if print_string then
           file:write(print_string .. ',\n')
@@ -288,7 +307,7 @@ local function table_dump_to_file(dumped_table, dumped_table_name, max_depth)
 
       file:write(prefix2 .. '"metatable": {\n')
 
-      for key, value in pairs(table_entry[4]) do
+      for key, value in sorted_pairs(table_entry[4]) do
 
         if print_string then
           file:write(print_string .. ',\n')
@@ -312,7 +331,7 @@ local function table_dump_to_file(dumped_table, dumped_table_name, max_depth)
 
       local prefix2 = prefix .. '  "'
 
-      for key, value in pairs(table_entry[3]) do
+      for key, value in sorted_pairs(table_entry[3]) do
 
         if print_string then
           file:write(print_string .. ',\n')
