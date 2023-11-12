@@ -24,7 +24,7 @@ function DMFMod:init(mod_name)
 
   self._data = setmetatable({}, {
     __index = {},
-    __newindex = function(t_, k)
+    __newindex = function(_, k)
       self:warning("Attempt to change internal mod data value (\"%s\"). Changing internal mod data is forbidden.", k)
     end
   })
@@ -37,7 +37,8 @@ function DMFMod:init(mod_name)
   local vanilla_mod_data = Managers.mod:mod_data(mod_name)
   set_internal_data(self, "workshop_id",   vanilla_mod_data.id)
   set_internal_data(self, "workshop_name", vanilla_mod_data.name)
-  set_internal_data(self, "mod_handle",    vanilla_mod_data.handle)
+  set_internal_data(self, "mod_handle", vanilla_mod_data.handle)
+  set_internal_data(self, "is_bundled", vanilla_mod_data.bundled or false)
 
   print(string.format("Init DMF mod '%s' [workshop_name: '%s', workshop_id: %s]", mod_name, vanilla_mod_data.name,
                                                                                    vanilla_mod_data.id))

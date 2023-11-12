@@ -50,7 +50,11 @@ local function resolve_resource(mod, error_prefix_data, resource, resource_value
   local type_value = type(resource_value)
 
   if type_value == "string" then
-    return dmf.safe_call_dofile(mod, error_prefix_data, resource_value)
+    if mod:get_internal_data("is_bundled") then
+      return dmf.safe_call_dofile(mod, error_prefix_data, resource_value)
+    else
+      return dmf.safe_call_io_dofile(mod, error_prefix_data, resource_value)
+    end
   elseif type_value == "function" then
     return dmf.safe_call(mod, error_prefix_data, resource_value, mod)
   elseif type_value == "table" then
@@ -130,7 +134,6 @@ function new_mod(mod_name, mod_resources)
 
   return mod
 end
-
 
 function get_mod(mod_name)
   return _mods[mod_name]
