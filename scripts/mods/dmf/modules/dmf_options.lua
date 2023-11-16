@@ -249,32 +249,44 @@ dmf.on_setting_changed = function (setting_id)
 end
 
 dmf.load_developer_mode_settings = function () --@TODO: maybe move it to somewhere else?
-  Managers.mod._settings.developer_mode = dmf:get("developer_mode")
   Application.set_user_setting("mod_manager_settings", Managers.mod._settings)
+
+  local mod_manager = Managers.mod
+  if mod_manager and mod_manager.set_developer_mode then
+    mod_manager:set_developer_mode(dmf:get("developer_mode"))
+  end
 end
 
 -- ####################################################################################################################
 -- ##### Script #######################################################################################################
 -- ####################################################################################################################
 
-dmf.initialize_mod_data(dmf, dmf_mod_data)
+dmf.initialize_options = function()
+  dmf.initialize_mod_data(dmf, dmf_mod_data)
 
--- first DMF initialization
--- it will be run only 1 time, when the player launch the game with DMF for the first time
-if not dmf:get("dmf_initialized") then
+  -- first DMF initialization
+  -- it will be run only 1 time, when the player launch the game with DMF for the first time
+  if not dmf:get("dmf_initialized") then
 
-  dmf.load_logging_settings()
-  dmf.load_developer_mode_settings()
-  dmf.load_network_settings()
-  dmf.load_custom_textures_settings()
-  dmf.load_dev_console_settings()
-  dmf.load_chat_history_settings()
+    dmf.load_logging_settings()
+    dmf.load_developer_mode_settings()
+    dmf.load_network_settings()
+    dmf.load_custom_textures_settings()
+    dmf.load_dev_console_settings()
+    dmf.load_chat_history_settings()
 
-  -- Not necessary until the view is loaded
-  if dmf.load_dmf_options_view_settings then
-    dmf.load_dmf_options_view_settings()
+    -- Not necessary until the view is loaded
+    if dmf.load_dmf_options_view_settings then
+      dmf.load_dmf_options_view_settings()
+    end
+
+    dmf:notify(dmf:localize("dmf_first_run_notification"))
+    dmf:set("dmf_initialized", true)
   end
+end
 
-  dmf:notify(dmf:localize("dmf_first_run_notification"))
-  dmf:set("dmf_initialized", true)
+-- If we're already in the game (likely a mod reload), we
+-- can run the initialization immediately.
+if Main._sm:current_state_name() == "StateGame" then
+  dmf.initialize_options()
 end

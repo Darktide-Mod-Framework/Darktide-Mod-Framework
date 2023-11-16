@@ -568,10 +568,10 @@ end
 
 
 dmf.initialize_dmf_options_view = function ()
-  dmf:add_require_path("dmf/scripts/mods/dmf/modules/ui/options/dmf_options_view")
-  dmf:add_require_path("dmf/scripts/mods/dmf/modules/ui/options/dmf_options_view_definitions")
-  dmf:add_require_path("dmf/scripts/mods/dmf/modules/ui/options/dmf_options_view_settings")
-  dmf:add_require_path("dmf/scripts/mods/dmf/modules/ui/options/dmf_options_view_content_blueprints")
+  dmf:add_require_path("scripts/mods/dmf/modules/ui/options/dmf_options_view")
+  dmf:add_require_path("scripts/mods/dmf/modules/ui/options/dmf_options_view_definitions")
+  dmf:add_require_path("scripts/mods/dmf/modules/ui/options/dmf_options_view_settings")
+  dmf:add_require_path("scripts/mods/dmf/modules/ui/options/dmf_options_view_content_blueprints")
 
   dmf:register_view({
     view_name = "dmf_options_view",
@@ -586,7 +586,7 @@ dmf.initialize_dmf_options_view = function ()
       load_always = true,
       load_in_hub = true,
       package = "packages/ui/views/options_view/options_view",
-      path = "dmf/scripts/mods/dmf/modules/ui/options/dmf_options_view",
+      path = "scripts/mods/dmf/modules/ui/options/dmf_options_view",
       state_bound = true,
       enter_sound_events = {
         "wwise/events/ui/play_ui_enter_short"
@@ -607,7 +607,7 @@ dmf.initialize_dmf_options_view = function ()
     }
   })
 
-  dmf:io_dofile("dmf/scripts/mods/dmf/modules/ui/options/dmf_options_view")
+  dmf:dofile("scripts/mods/dmf/modules/ui/options/dmf_options_view")
 end
 
 -- ####################################################################################################################

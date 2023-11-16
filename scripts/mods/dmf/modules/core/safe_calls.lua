@@ -8,16 +8,22 @@ local print = __print
 -- #####################################################################################################################
 
 local function pack_pcall(status, ...)
-  return status, {n = select('#', ...), ...}
+  return status, { n = select('#', ...), ... }
 end
 
 
-local function print_error_callstack(error_message)
-  if type(error_message) == "table" and error_message.error then
-    error_message = error_message.error
+local function print_error_callstack(err)
+  if type(err) == "table" and err.error then
+    Log.error(
+      "DMF",
+      "%s\n<<Lua Stack>>%s<</Lua Stack>>\n<<Lua Locals>>%s<</Lua Locals>>\n<<Lua Self>>%s<</Lua Self>>",
+      err.error, err.traceback, err.locals, err.self
+    )
+  else
+    Log.error("DMF", "Error: %s\n%s", tostring(err), Script.callstack())
   end
-  print("Error: " .. tostring(error_message) .. "\n" .. Script.callstack())
-  return error_message
+
+  return err
 end
 
 
@@ -40,12 +46,6 @@ function DMFMod:pcall(...)
   return dmf.safe_call(self, "(pcall)", ...)
 end
 
-
-function DMFMod:dofile(file_path)
-  local _, return_values = pack_pcall(dmf.safe_call_dofile(self, "(dofile)", file_path))
-  return unpack(return_values, 1, return_values.n)
-end
-
 -- #####################################################################################################################
 -- ##### DMF internal functions and variables ##########################################################################
 -- #####################################################################################################################
@@ -60,7 +60,6 @@ function dmf.safe_call(mod, error_prefix_data, func, ...)
   return success, unpack(return_values, 1, return_values.n)
 end
 
-
 -- Safe Call [No return values]
 function dmf.safe_call_nr(mod, error_prefix_data, func, ...)
   local success, error_message = xpcall(func, print_error_callstack, ...)
@@ -69,7 +68,6 @@ function dmf.safe_call_nr(mod, error_prefix_data, func, ...)
   end
   return success
 end
-
 
 -- Safe Call [No return values and error callstack]
 function dmf.safe_call_nrc(mod, error_prefix_data, func, ...)
@@ -80,7 +78,6 @@ function dmf.safe_call_nrc(mod, error_prefix_data, func, ...)
   return success
 end
 
-
 -- Safe Call [dofile]
 function dmf.safe_call_dofile(mod, error_prefix_data, file_path)
   if type(file_path) ~= "string" then
@@ -90,7 +87,6 @@ function dmf.safe_call_dofile(mod, error_prefix_data, file_path)
   return dmf.safe_call(mod, error_prefix_data, dofile, file_path)
 end
 
-
 -- Safe Call [io_dofile]
 function dmf.safe_call_io_dofile(mod, error_prefix_data, file_path)
   if type(file_path) ~= "string" then
@@ -99,7 +95,6 @@ function dmf.safe_call_io_dofile(mod, error_prefix_data, file_path)
   end
   return dmf.safe_call(mod, error_prefix_data, mod.io_dofile_unsafe, mod, file_path)
 end
-
 
 -- Format error message and throw error.
 function dmf.throw_error(error_message, ...)

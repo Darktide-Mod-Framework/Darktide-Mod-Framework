@@ -50,7 +50,11 @@ local function resolve_resource(mod, error_prefix_data, resource, resource_value
   local type_value = type(resource_value)
 
   if type_value == "string" then
-    return dmf.safe_call_io_dofile(mod, error_prefix_data, resource_value)
+    if mod:get_internal_data("is_bundled") then
+      return dmf.safe_call_dofile(mod, error_prefix_data, resource_value)
+    else
+      return dmf.safe_call_io_dofile(mod, error_prefix_data, resource_value)
+    end
   elseif type_value == "function" then
     return dmf.safe_call(mod, error_prefix_data, resource_value, mod)
   elseif type_value == "table" then
@@ -131,7 +135,6 @@ function new_mod(mod_name, mod_resources)
   return mod
 end
 
-
 function get_mod(mod_name)
   return _mods[mod_name]
 end
@@ -170,11 +173,13 @@ function dmf.initialize_mod_data(mod, mod_data)
 
   -- Mod's options initialization
   if mod_data.options or (not mod_data.is_mutator and not mod_data.options_widgets) then
-    local success, error_message = pcall(dmf.initialize_mod_options, mod, mod_data.options)
-    if not success then
-      mod:error(ERRORS.REGULAR.mod_options_initializing_failed, error_message)
-      return
-    end
+    dmf.safe_call(
+        dmf,
+        ERRORS.REGULAR.mod_options_initializing_failed,
+        dmf.initialize_mod_options,
+        mod,
+        mod_data.options
+    )
   end
 
   -- Textures initialization @TODO: move to a separate function

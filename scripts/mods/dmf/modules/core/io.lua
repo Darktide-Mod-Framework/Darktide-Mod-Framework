@@ -95,7 +95,7 @@ local function handle_io(mod, local_path, file_name, file_extension, args, safe_
 
     -- If this is a safe call, wrap it in a pcall
     if safe_call then
-      status, result = pcall(function ()
+      status, result = pcall(function()
         return read_or_execute(file_path, args, return_type)
       end)
 
@@ -114,24 +114,11 @@ local function handle_io(mod, local_path, file_name, file_extension, args, safe_
 
   -- If the initial open failed, report failure
   else
-    mod:error("Error opening '" .. file_path .. "': " .. tostring(err_io))
+    mod:error("Error during I/O: %s\n%s", tostring(err_io), Script.callstack())
     return false
   end
 end
 
-
--- Return whether the file exists at the given path
-local function file_exists(local_path, file_name, file_extension)
-  local file_path = get_file_path(local_path, file_name, file_extension)
-  local f = _io.open(file_path,"r")
-
-  if f ~= nil then
-    _io.close(f)
-    return true
-  else
-    return false
-  end
-end
 
 -- #####################################################################################################################
 -- ##### DMFMod ########################################################################################################
@@ -142,24 +129,20 @@ function DMFMod:io_exec(local_path, file_name, file_extension, args)
   return handle_io(self, local_path, file_name, file_extension, args, true, "exec_boolean")
 end
 
-
 -- Use the io library to execute the given file without a pcall, without return
 function DMFMod:io_exec_unsafe(local_path, file_name, file_extension, args)
   return handle_io(self, local_path, file_name, file_extension, args, false, "exec_boolean")
 end
-
 
 -- Use the io library to execute the given file with a pcall and return the result
 function DMFMod:io_exec_with_return(local_path, file_name, file_extension, args)
   return handle_io(self, local_path, file_name, file_extension, args, true, "exec_result")
 end
 
-
 -- Use the io library to execute the given file without a pcall and return the result
 function DMFMod:io_exec_unsafe_with_return(local_path, file_name, file_extension, args)
   return handle_io(self, local_path, file_name, file_extension, args, false, "exec_result")
 end
-
 
 -- Use the io library to execute the given file with a pcall and return the result,
 -- but treat the first parameter as the entire path to the file, and assume .lua.
@@ -168,14 +151,12 @@ function DMFMod:io_dofile(file_path)
   return handle_io(self, file_path, nil, nil, nil, true, "exec_result")
 end
 
-
 -- Use the io library to execute the given file without a pcall and return the result,
 -- but treat the first parameter as the entire path to the file, and assume .lua.
 -- IO version of the dofile method.
 function DMFMod:io_dofile_unsafe(file_path)
   return handle_io(self, file_path, nil, nil, nil, false, "exec_result")
 end
-
 
 -- Use the io library to return the contents of the given file
 function DMFMod:io_read_content(file_path, file_extension)
