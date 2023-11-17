@@ -159,7 +159,7 @@ dmf_mod_data.options = {
         {
           setting_id    = "chat_history_save",
           type          = "checkbox",
-          default_value = true
+          default_value = false
         },
         {
           setting_id    = "chat_history_buffer_size",
@@ -186,7 +186,7 @@ dmf_mod_data.options = {
         {
           setting_id = "chat_history_commands_only",
           type = "checkbox",
-          default_value = false
+          default_value = true
         }
       }
     }
