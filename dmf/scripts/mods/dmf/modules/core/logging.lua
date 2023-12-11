@@ -198,6 +198,14 @@ function dmf.delayed_chat_messages_hook()
       end
     end
   end)
+
+  -- @TODO: UIWidget.destroy doesn't check for null ui_renderer.
+  -- This hook should be removed when Fatshark fixes ConstantElementNotificationFeed._remove_notification
+  dmf:hook_require("scripts/managers/ui/ui_widget", function(instance)
+    dmf:hook(instance, "destroy", function(func, ui_renderer, widget, ...)
+      return ui_renderer and func(ui_renderer, widget, ...)
+    end)
+  end)
 end
 
 function dmf.load_logging_settings()
