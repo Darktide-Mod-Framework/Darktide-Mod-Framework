@@ -424,6 +424,7 @@ dmf:add_global_localize_strings({
     es = "Configuración de mods",
     ru = "Настройки модов",
     ["zh-cn"] = "模组选项",
+    ja = "Modオプション",
   }
 })
 
