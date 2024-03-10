@@ -1,7 +1,6 @@
 local dmf = get_mod("DMF")
 
 local _player_hud
-local _spectator_hud
 local _elements_data = {}
 
 local ELEMENT_STATUS = table.enum("REGISTERED", "INJECTED")
@@ -44,10 +43,6 @@ local function get_mod_hud_elements(mod)
 end
 
 local function remove_injected_hud_elements(mod)
-
-  if _player_hud then
-
-  end
 
   local visibility_groups_lookup = _player_hud._visibility_groups
   local elements_to_remove = mod and get_mod_hud_elements(mod) or _elements_data
@@ -238,7 +233,6 @@ end)
 
 dmf:hook_safe(CLASS.UIHud, "destroy", function()
   _player_hud = nil
-  _spectator_hud = nil
   -- HUD elements are reset every time the party is changed (including the initial local-player-only lobby)
   -- We need to reset injection status as well.
   reset_element_status()
@@ -276,4 +270,3 @@ end
 
 -- If DMF is reloaded mid-game, get ingame_hud.
 _player_hud = Managers.ui and Managers.ui._hud
-_spectator_hud = Managers.ui and Managers.ui._spectator_hud
