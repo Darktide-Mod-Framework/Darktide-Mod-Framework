@@ -9,18 +9,12 @@ local ERRORS = {
   THROWABLE = {
     -- inject_hud_element:
     element_already_exists = "hud element with class_name '%s' already exists.",
-    visibility_group_already_exists = "visibility group with name '%s' already exists.",
     -- validate_element_data:
     class_name_wrong_type = "'class_name' must be a string, not %s.",
     filename_wrong_type = "'filename' must be a string, not %s.",
     visibility_groups_wrong_type = "'visibility_groups' must be a table, not %s.",
     visibility_groups_key_wrong_type = "'visibility_groups' table keys must be a number, not %s.",
     visibility_groups_value_wrong_type = "'visibility_groups' table values must be a string or table, not %s.",
-    custom_visibility_group_name_wrong_type = "'visibility_group.name' must be a string, not %s.",
-    custom_visibility_group_validation_function_wrong_type = [[
-      'visibility_group.validation_function' must be a function, not %s.
-    ]],
-    custom_visibility_group_priority_wrong_type = "'visibility_group.priority' must be a number, not %s.",
     use_retained_mode_wrong_type = "'use_retained_mode' must be a boolean or nil, not %s.",
     use_hud_scale_wrong_type = "'use_hud_scale' must be a boolean or nil, not %s.",
     validation_func_wrong_type = "'validation_function' must be a function or nil, not %s."
@@ -60,13 +54,6 @@ local function remove_injected_hud_elements(mod)
       local element_settings = element_data.element_settings
 
       if visibility_groups_lookup then
-        for _, group_settings in ipairs(element_settings.custom_visibility_groups) do
-          local index = table.find_by_key(visibility_groups_lookup, "name", group_settings.name)
-          if index then
-            table.remove(visibility_groups_lookup, index)
-          end
-        end
-
         for _, group_name in ipairs(element_settings.visibility_groups) do
           local _, visibility_group = table.find_by_key(visibility_groups_lookup, "name", group_name)
           local visible_elements = visibility_group and visibility_group.visible_elements
@@ -94,23 +81,6 @@ local function remove_injected_hud_elements(mod)
 end
 
 -- @ THROWS_ERRORS
----@param visibility_groups VisibilityGroupSettings
-local function inject_visibility_groups(visibility_groups)
-  -- sort by priority desc?
-  for i, visibility_group in ipairs(visibility_groups) do
-    if table.find_by_key(_player_hud._visibility_groups, "name", visibility_group.name) then
-      dmf.throw_error(ERRORS.THROWABLE.visibility_group_already_exists, visibility_group.name)
-    end
-
-    table.insert(_player_hud._visibility_groups, visibility_group.priority, {
-      name = visibility_group.name,
-      validation_function = visibility_group.validation_function
-    })
-  end
-
-end
-
--- @ THROWS_ERRORS
 ---@param element_name string
 local function inject_hud_element(element_name)
   local element_data = _elements_data[element_name]
@@ -125,8 +95,6 @@ local function inject_hud_element(element_name)
   if _player_hud._elements[element_name] then
     dmf.throw_error(ERRORS.THROWABLE.element_already_exists, element_name)
   end
-
-  inject_visibility_groups(element_settings.custom_visibility_groups)
 
   mod:add_require_path(element_settings.filename)
   _player_hud:_verify_elements({ element_settings })
@@ -167,21 +135,6 @@ local function validate_element_data(element_settings)
     if type(visibility_group) ~= "string" and type(visibility_group) ~= "table" then
       dmf.throw_error(ERRORS.THROWABLE.visibility_groups_value_wrong_type, type(visibility_group))
     end
-
-    if type(visibility_group) == "table" then
-      if type(visibility_group.name) ~= "string" then
-        dmf.throw_error(ERRORS.THROWABLE.custom_visibility_group_name_wrong_type, type(visibility_group.name))
-      end
-      if type(visibility_group.validation_function) ~= "function" then
-        dmf.throw_error(
-          ERRORS.THROWABLE.custom_visibility_group_validation_function_wrong_type,
-          type(visibility_group.validation_function)
-        )
-      end
-      if type(visibility_group.priority) ~= "number" then
-        dmf.throw_error(ERRORS.THROWABLE.custom_visibility_group_priority_wrong_type, type(visibility_group.priority))
-      end
-    end
   end
 
 end
@@ -196,11 +149,6 @@ end
 ---@field use_hud_scale       boolean  @ Set to `true` if the Hud Scale option should apply to the element
 ---@field use_retained_mode   boolean  @ Set to `true` if your element also uses retained mode (uncommon)
 ---@field validation_function function @ Determines whether to create the element. Omit to always enable the element
-
----@class VisibilityGroupSettings
----@field name                string   @ Name of the visibility group
----@field priority            number   @ Index to inject the group into; the first group to pass validation is active
----@field validation_function function @ Return true to enable the group, enabling all elements added to it
 
 --[[
   Validates provided element settings, injects the element, and returns 'true' if everything is correct.
@@ -233,22 +181,6 @@ function DMFMod:register_hud_element(element_settings)
   ) then
     return
   end
-
-  local custom_visibility_groups = {}
-  for i, visibility_group in ipairs(element_settings.visibility_groups) do
-    if type(visibility_group) == "table" then
-      table.insert(custom_visibility_groups, visibility_group)
-    end
-  end
-
-  for i, custom_visibility_group in ipairs(custom_visibility_groups) do
-    local index = table.index_of(element_settings.visibility_groups, custom_visibility_group)
-    if index then
-      table.remove(element_settings.visibility_groups, index)
-    end
-  end
-
-  element_settings.custom_visibility_groups = custom_visibility_groups
 
   _elements_data[element_name] = {
     mod = self,
