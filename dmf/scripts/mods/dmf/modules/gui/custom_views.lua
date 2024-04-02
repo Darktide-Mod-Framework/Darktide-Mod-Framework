@@ -337,7 +337,7 @@ end)
 dmf:hook_safe(CLASS.UIViewHandler, "init", function(self)
   _ingame_ui = self
   for view_name, _ in pairs(_custom_views_data) do
-    if not dmf.safe_call_nrc(self, {ERRORS.PREFIX.ingameui_hook_injection, view_name}, inject_view, view_name) then
+    if not dmf.safe_call_nrc(dmf, {ERRORS.PREFIX.ingameui_hook_injection, view_name}, inject_view, view_name) then
       _custom_views_data[view_name] = nil
     end
   end
