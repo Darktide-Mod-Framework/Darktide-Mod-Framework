@@ -38,6 +38,10 @@ end
 
 local function remove_injected_hud_elements(mod)
 
+  if not _player_hud then
+    return
+  end
+
   local visibility_groups_lookup = _player_hud._visibility_groups
   local elements_to_remove = mod and get_mod_hud_elements(mod) or _elements_data
 
@@ -226,11 +230,11 @@ dmf:hook_safe(CLASS.UIHud, "_setup_elements", function(self)
   end
 end)
 
-dmf:hook(CLASS.UIHud, "destroy", function(func, self)
+dmf:hook(CLASS.UIHud, "destroy", function(func, ...)
   remove_injected_hud_elements()
   _player_hud = nil
 
-  func(self)
+  func(...)
 end)
 
 -- #####################################################################################################################
@@ -256,9 +260,7 @@ function dmf.inject_hud_elements(mod)
 end
 
 function dmf.remove_injected_hud_elements(mod)
-  if _player_hud then
-    remove_injected_hud_elements(mod)
-  end
+  remove_injected_hud_elements(mod)
 end
 
 -- #####################################################################################################################
