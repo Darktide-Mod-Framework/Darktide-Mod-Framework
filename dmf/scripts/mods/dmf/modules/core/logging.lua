@@ -183,7 +183,7 @@ end
 -- Can't be hooked right away, since hooking module is not initialized yet
 -- Sends unsent messages to chat when chat channel is finally created
 function dmf.delayed_chat_messages_hook()
-  dmf:hook_safe("ConstantElementChat", "_handle_input", function (self)
+  dmf:hook_safe(CLASS.ConstantElementChat, "_handle_input", function (self)
 
     -- Store the chat element for adding messages directly
     _chat_element = self

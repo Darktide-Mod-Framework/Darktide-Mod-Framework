@@ -91,7 +91,7 @@ end
 -- ##### DMF internal functions and variables #########################################################################
 -- ####################################################################################################################
 
-dmf:hook(LocalizationManager, "localize", function (func, self, text_id, ...)
+dmf:hook(CLASS.LocalizationManager, "localize", function (func, self, text_id, ...)
 
   local text_translations = text_id and _global_localization_database[text_id]
   local message = get_translated_or_english_message(nil, text_translations, ...)

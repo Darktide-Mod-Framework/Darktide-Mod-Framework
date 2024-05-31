@@ -77,7 +77,7 @@ end
 -- ####################################################################################################################
 
 -- Handle chat actions when the chat window is active
-dmf:hook("ConstantElementChat", "_handle_active_chat_input", function(func, self, input_service, ui_renderer, ...)
+dmf:hook(CLASS.ConstantElementChat, "_handle_active_chat_input", function(func, self, input_service, ui_renderer, ...)
   initialize_drawing_function()
 
   _chat_message = get_chat_message(self)

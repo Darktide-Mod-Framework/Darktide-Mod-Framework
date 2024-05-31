@@ -49,7 +49,7 @@ function dmf_mod_object:init()
   dmf:io_dofile("dmf/scripts/mods/dmf/modules/core/mutators/mutators_manager")
 
   dmf.delayed_chat_messages_hook()
-  dmf:hook(ModManager, "destroy", function(func, ...)
+  dmf:hook(CLASS.ModManager, "destroy", function(func, ...)
     dmf.mods_unload_event(true)
     func(...)
   end)
