@@ -155,6 +155,7 @@ dmf:hook(CLASS.ConstantElementChat, "_handle_active_chat_input", function(func, 
 
     -- getting state of 'arrow right', 'arrow up' and 'arrow down' buttons
     local arrow_right_pressed = false
+    local tab_pressed = false
     local arrow_up_pressed = false
     local arrow_down_pressed = false
     for _, stroke in ipairs(Keyboard.keystrokes()) do
@@ -162,6 +163,8 @@ dmf:hook(CLASS.ConstantElementChat, "_handle_active_chat_input", function(func, 
         -- so I have to check for ctrl not pressed
       if stroke == Keyboard.RIGHT and Keyboard.button(Keyboard.button_index("left ctrl")) == 0 then
         arrow_right_pressed = true
+      elseif stroke == Keyboard.TAB and Keyboard.button(Keyboard.button_index("left ctrl")) == 0 then
+        tab_pressed = true
       elseif stroke == Keyboard.UP and Keyboard.button(Keyboard.button_index("left ctrl")) == 0 then
         arrow_up_pressed = true
       elseif stroke == Keyboard.DOWN and Keyboard.button(Keyboard.button_index("left ctrl")) == 0 then
@@ -205,9 +208,9 @@ dmf:hook(CLASS.ConstantElementChat, "_handle_active_chat_input", function(func, 
 
       local autocompleting = false
 
-      -- if there's no space after '/part_of_command_name' and if arrow_right was pressed
-      if not string.find(_chat_message, " ") and arrow_right_pressed and
-         -- if arrow_right was pressed with caret at the end of the string
+      -- if there's no space after '/part_of_command_name' and if arrow_right or tab was pressed
+      if not string.find(_chat_message, " ") and (arrow_right_pressed or tab_pressed) and
+         -- if autocomplete was pressed with caret at the end of the string
          (string.len(_chat_message) + 1) == get_chat_index(self) and
          -- if there are any commands matching entered '/part_of_command_name
          (#_commands_list > 0) then
