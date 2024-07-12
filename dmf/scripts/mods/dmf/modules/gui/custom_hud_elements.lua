@@ -76,10 +76,10 @@ local function remove_injected_hud_elements(mod)
         element:destroy(_player_hud._ui_renderer)
       end
 
-      (mod or element_data.mod):remove_require_path(element_settings.filename)
-
-      element_data.status = ELEMENT_STATUS.REGISTERED
+      element_data.mod:remove_require_path(element_settings.filename)
     end
+
+    element_data.status = ELEMENT_STATUS.REGISTERED
   end
 
 end
