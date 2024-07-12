@@ -75,9 +75,17 @@ local function get_object_reference(obj)
     if type(obj) == "table" then
         return obj, true
     elseif type(obj) == "string" then
+        -- Check the global table
         local obj_table = rawget(_G, obj)
         if obj_table then
             return obj_table, true
+
+        -- Check the class lookup table
+        else
+            obj_table = rawget(_G.CLASS, obj)
+            if obj_table then
+                return obj_table, true
+            end
         end
     end
     return obj, false
@@ -366,6 +374,7 @@ local function generic_hook_toggle(mod, obj, method, enabled_state)
         end
     end
 
+    -- Grab the object's reference, if this fails, obj will remain a string and the hook will be delayed.
     local obj, success = get_object_reference(obj) --luacheck: ignore
     if obj and not success then
         if _delaying_enabled and type(obj) == "string" then
