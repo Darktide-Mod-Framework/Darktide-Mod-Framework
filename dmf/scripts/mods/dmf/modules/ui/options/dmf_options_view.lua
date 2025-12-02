@@ -907,7 +907,7 @@ DMFOptionsView._set_tooltip_data = function (self, widget)
     local x_pos = starting_point[1] + widget.offset[1]
     local width = widget.content.size[1] * 0.5
     local text_options = UIFonts.get_font_options_by_style(text_style)
-    local _, text_height = self:_text_size(localized_text, text_style.font_type, text_style.font_size, {
+    local _, text_height = self:_text_size(localized_text, text_style, {
       width,
       0
     }, text_options)
