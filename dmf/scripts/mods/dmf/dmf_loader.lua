@@ -27,6 +27,7 @@ function dmf_mod_object:init()
   io_dofile("dmf/scripts/mods/dmf/modules/core/io")
 
   -- DMF's internal io module is now loaded:
+  ---@type DMFMod
   dmf = get_mod("DMF")
 
   dmf:io_dofile("dmf/scripts/mods/dmf/modules/debug/dev_console")
@@ -66,7 +67,6 @@ function dmf_mod_object:update(dt)
   dmf.execute_queued_chat_command()
 
   if not dmf.all_mods_were_loaded and Managers.mod._state == "done" then
-
     dmf.generate_keybinds()
     dmf.initialize_dmf_options_view()
     dmf.create_network_dictionary()
@@ -78,14 +78,12 @@ function dmf_mod_object:update(dt)
   end
 end
 
-
 function dmf_mod_object:on_unload()
   print("DMF:ON_UNLOAD()")
   dmf.save_chat_history()
   dmf.save_unsaved_settings_to_file()
   dmf.destroy_command_gui()
 end
-
 
 function dmf_mod_object:on_reload()
   print("DMF:ON_RELOAD()")
@@ -97,7 +95,6 @@ function dmf_mod_object:on_reload()
   dmf.reset_guis()
   dmf.destroy_command_gui()
 end
-
 
 function dmf_mod_object:on_game_state_changed(status, state)
   print("DMF:ON_GAME_STATE_CHANGED(), status: " .. tostring(status) .. ", state: " .. tostring(state))

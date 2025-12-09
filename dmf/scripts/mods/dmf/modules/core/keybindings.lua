@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = get_mod("DMF")
 
 local InputUtils = require("scripts/managers/input/input_utils")

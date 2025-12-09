@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = get_mod("DMF")
 
 -- This variable is defined here and not in widget data initialization function because some error messages

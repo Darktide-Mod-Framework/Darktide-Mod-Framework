@@ -14,6 +14,8 @@ end
 -- #####################################################################################################################
 
 -- Defining DMFMod class.
+---@class DMFMod
+---@field new fun(self: DMFMod, mod_name: string): DMFMod
 DMFMod = class("DMFMod")
 
 -- Creating mod data table when object of DMFMod class is created.
