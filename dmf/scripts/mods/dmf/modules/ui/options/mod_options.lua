@@ -346,6 +346,36 @@ local create_keybind_template = function (self, params)
 end
 _type_template_map["keybind"] = create_keybind_template
 
+-- ###########################
+-- ######### Text Input #########
+-- ###########################
+
+local create_text_input_template = function (self, params)
+  local template = {
+    after = params.parent_index,
+    category = params.category,
+    default_value = params.default_value or "",
+    display_name = params.title,
+    indentation_level = params.depth,
+    tooltip_text = params.tooltip,
+    widget_type = "text_input",
+    mod_name = params.mod_name,
+    setting_id = params.setting_id,
+  }
+  
+  template.on_activated = function(new_value)
+    get_mod(params.mod_name):set(params.setting_id, new_value, true)
+    return true
+  end
+
+  template.get_function = function()
+    return get_mod(params.mod_name):get(params.setting_id)
+  end
+
+  return template
+end
+_type_template_map["text_input"] = create_text_input_template
+
 
 -- ###########################
 -- ###### Miscellaneous ######

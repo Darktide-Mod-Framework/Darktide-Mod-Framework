@@ -5,6 +5,7 @@ local _view_settings = dmf:io_dofile("dmf/scripts/mods/dmf/modules/ui/options/dm
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local CheckboxPassTemplates = require("scripts/ui/pass_templates/checkbox_pass_templates")
 local DropdownPassTemplates = require("scripts/ui/pass_templates/dropdown_pass_templates")
+local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pass_templates") 
 local InputUtils = require("scripts/managers/input/input_utils")
 local KeybindPassTemplates = require("scripts/ui/pass_templates/keybind_pass_templates")
 local SliderPassTemplates = require("scripts/ui/pass_templates/slider_pass_templates")
@@ -774,6 +775,99 @@ blueprints.keybind = {
         _last_dropdown_pressed = -1
       end
     end
+  end
+}
+
+-- Copied the colors from the checkbox for the text input label
+local text_input_label_style = table.clone(UIFontSettings.header_4)
+text_input_label_style.offset = { 30, 0, 3 }
+text_input_label_style.text_horizontal_alignment = "left"
+text_input_label_style.text_vertical_alignment = "center"
+text_input_label_style.text_color = Color.terminal_text_body(255, true)
+
+blueprints.text_input = {
+ size = { settings_grid_width, settings_value_height },
+  
+ pass_template_function = function (parent, config, size)
+    local passes = table.clone(TextInputPassTemplates.simple_input_field)
+
+    table.insert(passes, {
+        value_id = "text",
+        pass_type = "text",
+        style = text_input_label_style, 
+    })
+
+    local x_offset = settings_grid_width - settings_value_width
+
+    for i = 1, #passes do
+      local pass = passes[i]
+      local style_id = pass.style_id or pass.value_id
+
+      if style_id ~= "text" then
+        pass.style = pass.style or {}
+        
+        pass.style.offset = pass.style.offset or { 0, 0, 0 }
+        pass.style.offset[1] = pass.style.offset[1] + x_offset
+        
+        if style_id == "background" or style_id == "focused" or pass.pass_type == "hotspot" then
+          pass.style.size = { settings_value_width, settings_value_height }
+        end
+        if style_id == "baseline" then
+          pass.style.size = { settings_value_width, 2 }
+          -- We force 'top' alignment so the Y offset (62) puts it exactly 
+          -- at the bottom of our 64px tall row.
+          pass.style.vertical_alignment = "top" 
+          pass.style.offset[2] = settings_value_height - 2
+        end
+
+        if pass.pass_type == "text" or pass.pass_type == "text_input" then
+          pass.style.size = { settings_value_width - 20, settings_value_height }
+          pass.style.offset[1] = pass.style.offset[1] + 10
+          pass.style.text_horizontal_alignment = "left"
+          pass.style.text_vertical_alignment = "center"
+        end
+      end
+    end
+
+    return passes
+  end,
+
+  init = function (parent, widget, entry, callback_name, changed_callback_name)
+    local content = widget.content
+    local style = widget.style
+
+    -- Set the initial text from the mod's current setting
+    content.input_text = ""
+    content.text = entry.display_name or Managers.localization:localize("loc_settings_option_unavailable")
+    content.entry = entry
+    content.hint_text = "Enter text..."
+    
+    -- Sync changes back to the mod when the user finishes typing
+    entry.changed_callback = function (changed_value)
+      if entry.on_activated then
+        entry.on_activated(changed_value, entry)
+      end
+    end
+  end,
+  update = function (parent, widget, input_service, dt, t)
+    local content = widget.content
+    local entry = content.entry
+    local devices = entry.devices
+    if content and content.is_writing and input_service then
+        -- We only run logic if we have the service
+        local clicked_away = input_service:get("left_pressed") and not content.hotspot.is_hover
+        local pressed_escape = input_service:get("back")
+        if clicked_away or pressed_escape then
+            content.is_writing = false
+            entry.changed_callback(content.input_text)
+        end
+    end
+    
+    if content.hotspot.is_focused or content.is_writing then
+        parent.is_text_input_focused = true
+    else 
+      parent.is_text_input_focused = false
+    end 
   end
 }
 

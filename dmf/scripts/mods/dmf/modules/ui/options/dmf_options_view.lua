@@ -946,6 +946,11 @@ DMFOptionsView._update_settings_content_widgets = function (self, dt, t, input_s
       if update then
         update(self, widget, input_service, dt, t)
       end
+
+      -- Allows text_input widgets to stop typing with escape, without closing the entire mod options menu
+      if widget.content.is_writing then
+        self._selected_settings_widget = widget
+      end
     end
 
     if selected_settings_widget and self._close_selected_setting then
