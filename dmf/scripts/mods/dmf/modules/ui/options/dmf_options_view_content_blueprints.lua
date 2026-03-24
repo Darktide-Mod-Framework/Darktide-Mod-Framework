@@ -837,7 +837,7 @@ blueprints.text_input = {
     local style = widget.style
 
     -- Set the initial text from the mod's current setting
-    content.input_text = ""
+    content.input_text = entry.get_function and entry.get_function() or ""
     content.text = entry.display_name or Managers.localization:localize("loc_settings_option_unavailable")
     content.entry = entry
     content.hint_text = "Enter text..."
