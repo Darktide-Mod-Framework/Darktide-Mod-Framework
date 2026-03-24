@@ -346,9 +346,9 @@ local create_keybind_template = function (self, params)
 end
 _type_template_map["keybind"] = create_keybind_template
 
--- ###########################
+-- ##############################
 -- ######### Text Input #########
--- ###########################
+-- ##############################
 
 local create_text_input_template = function (self, params)
   local template = {
@@ -361,10 +361,15 @@ local create_text_input_template = function (self, params)
     widget_type = "text_input",
     mod_name = params.mod_name,
     setting_id = params.setting_id,
+    function_name = params.function_name
   }
   
   template.on_activated = function(new_value)
-    get_mod(params.mod_name):set(params.setting_id, new_value, true)
+    local mod = get_mod(params.mod_name)
+    mod:set(params.setting_id, new_value, true)
+    if template.function_name and mod[template.function_name] then
+      dmf.safe_call_nr(mod, {"[Text Input] function_call", template.function_name}, mod[template.function_name], true)
+    end
     return true
   end
 

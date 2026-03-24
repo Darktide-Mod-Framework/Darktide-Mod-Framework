@@ -449,7 +449,7 @@ local function initialize_widget_data(mod, data, localize, collapsed_widgets)
   elseif data.type == "numeric" then
     return initialize_numeric_data(mod, data, localize)
   elseif data.type == "text_input" then
-    return initialize_generic_widget_data(mod, data, localize)
+    return initialize_keybind_data(mod, data, localize)
   end
   -- if data.type is incorrect, returns nil
 end
