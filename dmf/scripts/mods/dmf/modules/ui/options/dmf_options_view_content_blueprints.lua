@@ -848,6 +848,9 @@ blueprints.text_input = {
     content.text = entry.display_name or Managers.localization:localize("loc_settings_option_unavailable")
     content.entry = entry
     content.hint_text = "Enter text..."
+    -- Update the mod:get() value for this widget to whatever the current input_text is. This fixes a bug
+    -- where it returns a table instead of the table string since text_input reuses keybind functionality
+    entry.on_activated(content.input_text, entry)
     
     -- Sync changes back to the mod when the user finishes typing
     entry.changed_callback = function (changed_value)
