@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = get_mod("DMF")
 
 -- Global backup of original print() method

@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = get_mod("DMF")
 
 local _custom_view_persistent_data = dmf:persistent_table("custom_view_data")

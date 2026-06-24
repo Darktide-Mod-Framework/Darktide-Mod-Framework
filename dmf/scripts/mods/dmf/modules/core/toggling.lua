@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = get_mod("DMF")
 
 local _disabled_mods = dmf:get("disabled_mods_list") or {}

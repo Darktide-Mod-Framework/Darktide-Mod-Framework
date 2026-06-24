@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = get_mod("DMF")
 
 local _show_debug_info = false

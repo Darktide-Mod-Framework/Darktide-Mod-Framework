@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = get_mod("DMF")
 
 local _view_settings = dmf:io_dofile("dmf/scripts/mods/dmf/modules/ui/options/dmf_options_view_settings")

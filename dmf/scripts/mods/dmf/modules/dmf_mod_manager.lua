@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = nil
 
 local _mods = {}
@@ -31,6 +32,8 @@ local ERRORS = {
 -- ##### Local functions ###############################################################################################
 -- #####################################################################################################################
 
+---@param mod_name string
+---@return DMFMod | nil
 local function create_mod(mod_name)
   if _mods[mod_name] then
     dmf:error(ERRORS.REGULAR.duplicate_mod_name, mod_name)
@@ -132,6 +135,8 @@ function new_mod(mod_name, mod_resources)
 end
 
 
+---@param mod_name string
+---@return DMFMod
 function get_mod(mod_name)
   return _mods[mod_name]
 end
@@ -140,6 +145,7 @@ end
 -- ##### DMF Initialization ############################################################################################
 -- #####################################################################################################################
 
+---@class DMFMod
 dmf = create_mod("DMF")
 
 -- #####################################################################################################################

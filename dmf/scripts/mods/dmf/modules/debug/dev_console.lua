@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = get_mod("DMF")
 
 -- Note(Siku): This file could definitely use the hooking system if we could figure out a way.

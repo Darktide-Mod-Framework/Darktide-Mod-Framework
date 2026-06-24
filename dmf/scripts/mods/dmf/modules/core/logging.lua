@@ -1,3 +1,4 @@
+---@class DMFMod
 local dmf = get_mod("DMF")
 
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
