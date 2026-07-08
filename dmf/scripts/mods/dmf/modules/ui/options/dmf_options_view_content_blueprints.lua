@@ -870,6 +870,11 @@ blueprints.text_input = {
         local pressed_escape = input_service:get("back")
         if clicked_away or pressed_escape then
             content.is_writing = false
+            -- Clear text selection on losing focus
+            content.selected_text = nil
+            content._selection_start = nil
+            content._selection_end = nil
+            content._selection_changed = nil
             entry.changed_callback(content.input_text)
         end
     end
