@@ -9,6 +9,7 @@ Contribute to DMF -- add your name here!
 + [philipdestroyer](https://github.com/philippedavid)
 + [ronvoluted](https://github.com/ronvoluted)
 + [SirAiedail](https://github.com/SirAiedail)
++ [matt-sr](https://github.com/matt-sr)
 
 # VMF contributors (sorted alphabetically)
 + [Aussiemon](https://github.com/Aussiemon)
