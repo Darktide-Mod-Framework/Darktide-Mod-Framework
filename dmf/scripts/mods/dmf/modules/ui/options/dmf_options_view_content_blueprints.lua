@@ -794,6 +794,7 @@ blueprints.text_input = {
 
     table.insert(passes, {
         value_id = "text",
+        style_id = "text",
         pass_type = "text",
         style = text_input_label_style, 
     })
@@ -864,6 +865,34 @@ blueprints.text_input = {
     local content = widget.content
     local entry = content.entry
     local devices = entry.devices
+    local is_disabled = entry.disabled or false
+    local hotspot = content.hotspot
+    local style = widget.style
+
+    -- Enable/disable input interactivity
+    hotspot.disabled = is_disabled
+
+    -- Update transparency every frame for 'disabled' styling
+    style.text.text_color[1]          = is_disabled and 100 or 255
+    style.display_text.text_color[1]      = is_disabled and 120 or 255
+    style.active_placeholder.text_color[1]= is_disabled and 120 or 200
+    style.baseline.color[1]               = is_disabled and 120 or 255
+    style.background.color[1]             = is_disabled and 180 or 255
+    style.focused.color[1]                = is_disabled and 0 or 255
+
+    -- If disabled, clear states, exit early
+    if is_disabled then
+        hotspot.is_focused = false
+        hotspot.is_selected = false
+
+        if content.is_writing then
+            content.is_writing = false
+            entry.changed_callback(content.input_text)
+        end
+
+        parent.is_text_input_focused = false
+        return
+    end
     if content and content.is_writing and input_service then
         -- We only run logic if we have the service
         local clicked_away = input_service:get("left_pressed") and not content.hotspot.is_hover
