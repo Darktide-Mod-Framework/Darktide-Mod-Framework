@@ -85,6 +85,10 @@ local function validate_generic_widget_data(data)
     dmf.throw_error("[widget \"%s\" (%s)]: 'tooltip' field must have 'string' type", setting_id, data.type)
   end
 
+  if data.disabled_function and type(data.disabled_function) ~= "function" then
+    dmf.throw_error("[widget \"%s\" (%s)]: 'disabled_function' field must have 'function' type", setting_id, data.type)
+  end
+
   if _defined_mod_settings[setting_id] then
     dmf:dump(_unfolded_raw_widgets_data, "widgets", 1)
     dmf.throw_error("Widgets %d and %d have the same setting_id (\"%s\"). See dumped table in game log for reference.",
@@ -124,6 +128,7 @@ local function initialize_generic_widget_data(mod, data, localize)
   new_data.tooltip         = data.tooltip         -- optional
   new_data.default_value   = data.default_value
   new_data.require_restart = data.require_restart -- optional
+  new_data.disabled_function = data.disabled_function -- optional
 
   -- Overwrite global optons localization setting if widget defined it
   if data.localize == nil then

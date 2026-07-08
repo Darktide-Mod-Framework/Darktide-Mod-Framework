@@ -944,6 +944,11 @@ DMFOptionsView._update_settings_content_widgets = function (self, dt, t, input_s
       local template = _content_blueprints[widget_type]
       local update = template and template.update
 
+      local entry = widget.content.entry
+      if entry and entry.disabled_function then
+        entry.disabled = entry.disabled_function() and true or false
+      end
+
       if update then
         update(self, widget, input_service, dt, t)
       end

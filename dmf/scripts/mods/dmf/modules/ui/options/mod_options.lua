@@ -593,6 +593,7 @@ dmf.create_mod_options_settings = function (self, options_templates)
           template.custom = true
           template.category = category.display_name
           template.after = template.after + index_offset
+          template.disabled_function = widget_data.disabled_function
 
           settings[#settings + 1] = template
         end
