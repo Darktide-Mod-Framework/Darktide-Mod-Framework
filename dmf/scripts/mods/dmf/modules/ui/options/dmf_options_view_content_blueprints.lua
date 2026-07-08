@@ -768,8 +768,10 @@ blueprints.keybind = {
     local preview_value = value and InputUtils.localized_string_from_key_info(value) or content.key_unassigned_string
     content.value_text = preview_value
     local hotspot = content.hotspot
+    local is_disabled = entry.disabled or false
+    content.disabled = is_disabled
 
-    if hotspot.on_released then
+    if not is_disabled and hotspot.on_released then
       if (t - _last_dropdown_pressed) > _dropdown_deadzone then
         parent:show_keybind_popup(widget, entry, content.entry.cancel_keys)
       else
