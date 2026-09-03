@@ -82,7 +82,7 @@ DMFMod.dump = function (self, dumped_object, object_name, max_depth)
       error_message = error_message .. " (" .. tostring(dumped_object) .. ")"
     end
 
-    self:error(error_message)
+    self:error("%s", error_message)
     return
   end
 
@@ -364,7 +364,7 @@ DMFMod.dump_to_file = function (self, dumped_object, object_name, max_depth)
       error_message = error_message .. " (" .. tostring(dumped_object) .. ")"
     end
 
-    self:error(error_message)
+    self:error("%s", error_message)
     return
   end
 
