@@ -141,7 +141,7 @@ dmf:hook(CLASS.ConstantElementChat, "_handle_active_chat_input", function(func, 
       set_chat_message(self, "")
 
     elseif string.sub(_chat_message, 1, 1) == "/" then
-      dmf:notify(dmf:localize("chat_command_not_recognized") .. ": " .. _chat_message)
+      dmf:notify("%s", dmf:localize("chat_command_not_recognized") .. ": " .. _chat_message)
       set_chat_message(self, "")
       return
     end

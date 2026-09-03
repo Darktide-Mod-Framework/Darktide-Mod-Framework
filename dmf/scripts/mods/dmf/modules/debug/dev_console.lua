@@ -81,9 +81,25 @@ local function disable_dev_console_close()
   end
 end
 
+local function stringify_print_values(message, ...)
+  local num_additional_values = select("#", ...)
+  local values = {tostring(message)}
+
+  for i = 1, num_additional_values do
+    values[i + 1] = tostring(select(i, ...))
+  end
+
+  return table.concat(values, " ")
+end
+
 local function log_and_console_print(...)
-  CommandWindow.print(...)
-  _console_data.original_print(...)
+  local print_message = stringify_print_values(...)
+
+  CommandWindow.print(print_message)
+
+  -- the game's print implementation builds a Log.info format string from these values. The first value is inserted
+  -- without escaping '%', so Log.info parses its contents again. Bypass print and use a fixed format string here.
+  Log.info(Log.DEFAULT_CATEGORY, "%s", print_message)
 end
 
 local function open_dev_console()

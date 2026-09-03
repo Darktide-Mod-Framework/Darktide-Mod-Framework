@@ -152,7 +152,7 @@ function DMFMod:echo(message, ...)
 end
 function DMFMod:echo_localized(localization_id, ...)
   if _logging_settings.echo.enabled then
-    log_message(self, "echo", self:localize(localization_id, ...))
+    log_message(self, "echo", "%s", self:localize(localization_id, ...))
   end
 end
 
