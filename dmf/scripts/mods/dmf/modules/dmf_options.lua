@@ -9,6 +9,7 @@ dmf_mod_data.options = {
       setting_id      = "open_dmf_options",
       type            = "keybind",
       default_value   = {"f4"},
+      keybind_global  = true,
       keybind_trigger = "pressed",
       keybind_type    = "view_toggle",
       view_name       = "dmf_options_view"

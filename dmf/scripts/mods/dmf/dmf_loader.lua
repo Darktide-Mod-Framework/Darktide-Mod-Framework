@@ -103,10 +103,6 @@ function dmf_mod_object:on_game_state_changed(status, state)
   dmf.save_unsaved_settings_to_file()
   dmf.apply_delayed_hooks()
   dmf.destroy_command_gui()
-
-  if status == "enter" and state == "StateIngame" then
-    dmf.create_keybinds_input_service()
-  end
 end
 
 -- #####################################################################################################################
