@@ -365,9 +365,8 @@ function dmf.remove_custom_views()
 end
 
 
--- Opens/closes a view if all conditions are met. Since keybinds module can't do UI-related checks, all the cheks are
--- done in this function. This function is called every time some view-toggling keybind is pressed.
-function dmf.keybind_toggle_view(mod, view_name, keybind_transition_data, can_perform_action, is_keybind_pressed)
+-- Applies view-specific checks and allows the foreground view to close even when opening is blocked
+function dmf.keybind_toggle_view(mod, view_name, can_perform_action, is_keybind_pressed, active_top_view)
 
   if _ingame_ui then
 
@@ -380,11 +379,13 @@ function dmf.keybind_toggle_view(mod, view_name, keybind_transition_data, can_pe
 
     -- If the view is open, this is a toggle close
     if Managers.ui:view_active(view_name) then
+      local can_close = can_perform_action or active_top_view == view_name
 
       -- Don't close the view if it's already closing or we have an active key watch
-      if not Managers.ui:is_view_closing(view_name) and not _key_watch then
+      if can_close and not Managers.ui:is_view_closing(view_name) and not _key_watch then
         local force_close = true
         Managers.ui:close_view(view_name, force_close)
+        return true
       end
 
     -- Otherwise, this is a toggle open
@@ -412,9 +413,8 @@ function dmf.keybind_toggle_view(mod, view_name, keybind_transition_data, can_pe
       }
 
       -- Open the view with default parameters
-      Managers.ui:open_view(view_name, transition_time, close_previous,
-                                      close_all, close_transition_time, view_context, view_settings_override)
-
+      return Managers.ui:open_view(view_name, transition_time, close_previous,
+                                             close_all, close_transition_time, view_context, view_settings_override)
     end
   end
 end

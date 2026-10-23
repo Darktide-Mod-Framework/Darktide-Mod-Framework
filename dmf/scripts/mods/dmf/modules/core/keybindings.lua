@@ -45,8 +45,37 @@ local MOUSE_KEY_PREFIX = "mouse "
 -- ##### Local functions ###############################################################################################
 -- #####################################################################################################################
 
--- @TODO: Link this input service to the player's input service and find some way to see if it's blocked
-local function is_dmf_input_service_active()
+local function is_in_gameplay_state()
+  local ui_manager = Managers.ui
+
+  if not ui_manager then
+    return false
+  end
+
+  local game_state_name = ui_manager:get_current_state_name()
+  local game_sub_state_name = ui_manager:get_current_sub_state_name()
+
+  if game_state_name ~= "StateGameplay" or game_sub_state_name ~= "GameplayStateRun" then
+    return false
+  end
+
+  local imgui_manager = Managers.imgui
+
+  if imgui_manager and imgui_manager:using_input() then
+    return false
+  end
+
+  if ui_manager:using_input() then
+    return false
+  end
+
+  local state_managers = Managers.state
+  local cinematic_manager = state_managers and state_managers.cinematic
+
+  if cinematic_manager and cinematic_manager:cinematic_active() then
+    return false
+  end
+
   return true
 end
 
@@ -62,17 +91,23 @@ end
 
 
 -- If check of keybind's conditions is successful, performs keybind's action and returns 'true'.
-local function perform_keybind_action(data, is_pressed)
-  local can_perform_action = is_dmf_input_service_active() or data.global or data.release_action
+local function perform_keybind_action(data, is_pressed, in_gameplay_state, active_top_view)
+  -- Held keybinds must still receive their release action after gameplay input is blocked.
+  local can_perform_action = data.global or data.release_action or in_gameplay_state
 
-  if data.type == "mod_toggle" and can_perform_action and not data.mod:get_internal_data("is_mutator") then
+  if data.type == "view_toggle" and data.mod:is_enabled() then
+    return dmf.keybind_toggle_view(data.mod, data.view_name, can_perform_action, is_pressed, active_top_view)
+  end
+
+  if not can_perform_action then
+    return
+  end
+
+  if data.type == "mod_toggle" and not data.mod:get_internal_data("is_mutator") then
     dmf.mod_state_changed(data.mod:get_name(), not data.mod:is_enabled())
     return true
-  elseif data.type == "function_call" and can_perform_action and data.mod:is_enabled() then
+  elseif data.type == "function_call" and data.mod:is_enabled() then
     call_function(data.mod, data.function_name, is_pressed)
-    return true
-  elseif data.type == "view_toggle" and data.mod:is_enabled() then
-    dmf.keybind_toggle_view(data.mod, data.view_name, data.transition_data, can_perform_action, is_pressed)
     return true
   end
 end
@@ -307,6 +342,9 @@ end
 -- * If several mods bound the same keys, keybind action will be performed for all of them when pressed.
 -- * Keybind is considered released when it was previously pressed and is no longer.
 function dmf.check_keybinds()
+  local in_gameplay_state = is_in_gameplay_state()
+  local ui_manager = Managers.ui
+  local active_top_view = ui_manager and ui_manager:active_top_view()
 
   -- For every keybind
   for _, keybind_data in ipairs(_keybinds) do
@@ -314,15 +352,16 @@ function dmf.check_keybinds()
     -- If the keybind is pressed
     if keybind_data.eval_func() then
 
-      -- Peform the keybind action once
-      if (not keybind_data.pressed) and perform_keybind_action(keybind_data, true) then
+      if not keybind_data.pressed then
+        local action_performed = perform_keybind_action(keybind_data, true, in_gameplay_state, active_top_view)
 
         -- Queue the release action if applicable
-        if keybind_data.trigger == "held" then
+        if action_performed and keybind_data.trigger == "held" then
           keybind_data.release_action = true
         end
 
-        -- Prevent a repeat action
+        -- Require the keybind to be released before it can be triggered again,
+        -- even if its action was blocked when it was initially pressed
         keybind_data.pressed = true
       end
 
@@ -334,7 +373,7 @@ function dmf.check_keybinds()
 
       -- Play the release action if applicable
       if keybind_data.release_action then
-        perform_keybind_action(keybind_data, false)
+        perform_keybind_action(keybind_data, false, in_gameplay_state, active_top_view)
         keybind_data.release_action = nil
       end
     end
@@ -382,18 +421,6 @@ function dmf.add_mod_keybind(mod, setting_id, raw_keybind_data)
   if dmf.all_mods_were_loaded then
     dmf.generate_keybinds()
   end
-end
-
-
--- Creates DMF input service. It is required to know when non-global keybinds can be triggered.
--- (Called every time a level is loaded, or on mods reload)
--- @TODO: Link this input service to the player's input service and find some way to see if it's blocked
-function dmf.create_keybinds_input_service()
-  -- -- To create the DMF input service in Darktide
-  -- local input_manager = Managers.input
-  -- local service_type = "DMF"
-  -- input_manager:add_setting(service_type, aliases, raw_key_table, filter_table, default_devices)
-  -- input_manager:get_input_service(service_type)
 end
 
 
@@ -479,10 +506,3 @@ function dmf.local_keys_to_keywatch_result(keys)
 
   return keywatch_result
 end
-
--- #####################################################################################################################
--- ##### Script ########################################################################################################
--- #####################################################################################################################
-
--- In case mods reloading was performed right at the moment of entering 'StateInGame'.
-dmf.create_keybinds_input_service()
